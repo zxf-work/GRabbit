@@ -10,12 +10,16 @@
 int main(int argc, char ** argv)
 {
 
+	printf("Welcome to the Rabbit-hopping program!\n");
+
+	findpath();
 
 	printf("Rabbit gets ready ...\n");
 
 	printf("Rabbit starts hopping ...\n");
 
 	clock_t begin = clock();
+
 
 	clock_t end = clock();
 

@@ -13,15 +13,17 @@
 #include<string.h>
 #include<time.h>
 
+typedef unsigned long  ul;
+
 typedef struct v{
-	unsigned long id;
-	unsigned long * ngb;
-	unsigned long dgr;
+	ul id;
+	ul * ngb;
+	ul dgr;
 }Vertex;
 
 typedef struct e{
-	unsigned long s;
-	unsigned long t;
+	ul s;
+	ul t;
 }Edge;
 
 
