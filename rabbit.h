@@ -26,6 +26,13 @@ typedef struct e{
 	ul t;
 }Edge;
 
-
+typedef struct r{
+	ul s;
+	ul t;
+	ul d;
+	ul vtotal;
+	ul etotal;
+	float ttotal;
+}Result;
 
 #endif /* RABBIT_H_ */

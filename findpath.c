@@ -35,6 +35,10 @@ void findpath(){
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
 
+	printf("Graph loaded\n");
+
+	shortpath(vlist, vcnt);
+
 	//cleanup(vlist, elist, vcnt);
 
 

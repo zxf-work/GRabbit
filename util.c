@@ -115,6 +115,17 @@ void adjmaker(Vertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 
 }
 
+void rinit(Result * res, ul qcnt){
+	ul i = 0;
+	for(i = 0; i < qcnt; i++){
+		res[i].s = 0;
+		res[i].t = 0;
+		res[i].d = 0;
+		res[i].vtotal = 0;
+		res[i].etotal = 0;
+		res[i].ttotal = 0.0;
+	}
+}
 void cleanup(Vertex * vlist, Edge * elist, ul vcnt){
 	ul i = 0;
 
