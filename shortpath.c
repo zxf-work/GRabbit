@@ -23,7 +23,7 @@ void shortpath(Vertex * vlist, ul vcnt) {
 
 	ul i = 0;
 
-	for(i=0;i<qcnt*2;i++){
+	for(i = 0; i < qcnt * 2; i++){
 		fscanf(fp,"%ld",&query[i]);
 	}
 	fclose(fp);
@@ -32,10 +32,11 @@ void shortpath(Vertex * vlist, ul vcnt) {
 	ul t = 0;
 
 	//baseline BFS
-	for(i = 0; i < 2 * qcnt; i + 2){
-			s = query[i];
-			t = query[i+1];
+	for(i = 0; i < qcnt; i++){
+			s = query[2*i];
+			t = query[2*i+1];
 			bfs(vlist, vcnt, s, t, &res[i]);
+
 	}
 	rinit(res, qcnt);
 

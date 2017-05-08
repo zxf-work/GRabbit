@@ -35,7 +35,7 @@ void findpath(){
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
 
-	printf("Graph loaded\n");
+	printf("Rabbit gets ready ... starts hopping ...\n");
 
 	shortpath(vlist, vcnt);
 

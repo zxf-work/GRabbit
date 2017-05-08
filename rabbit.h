@@ -12,6 +12,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+#include<stdbool.h>
 
 typedef unsigned long  ul;
 

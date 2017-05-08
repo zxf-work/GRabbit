@@ -98,7 +98,7 @@ void adjmaker(Vertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 	printf("Adjacency list generating : ");
 	for(i = 0; i< ecnt; i++){
 		s = elist[i].s;
-		t = elist[t].t;
+		t = elist[i].t;
 
 		vlist[s].ngb[off[s]] = t;
 		off[s]++;
