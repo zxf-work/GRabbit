@@ -51,6 +51,25 @@ ul qpop(Queue * q){
 	return v;
 }
 
+bool qsearch(Queue * q, ul l, ul id){
+
+	ul i = 0;
+	Unit * pt;
+	pt = q->head;
+	while(pt->next != NULL){
+		pt = pt->next;
+		if(pt->id == id){
+			return true;
+		}
+		i++;
+		if(i == l){
+			break;
+		}
+
+	}
+	return false;
+}
+
 void qclean(Queue * q){
 	Unit * pt;
 

@@ -31,6 +31,7 @@ typedef struct r{
 	ul s;
 	ul t;
 	ul d;
+	ul mid;
 	ul vtotal;
 	ul etotal;
 	float ttotal;

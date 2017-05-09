@@ -7,10 +7,10 @@
 
 #include"rabbit.h"
 
-void shortpath(Vertex * vlist, ul vcnt) {
+void shortpath(Vertex * vlist, Vertex * vlist_sort, ul vcnt) {
 
 	FILE * fp;
-	ul qcnt = 1000;
+	ul qcnt = 1;
 	ul * query = NULL;
 	Result * res;
 
@@ -41,13 +41,17 @@ void shortpath(Vertex * vlist, ul vcnt) {
 	rinit(res, qcnt);
 
 	ul k = 1;
+	while(k<256){
 	//S1: k-limited
-	klimit(vlist, vcnt, s, t, k, res);
+	klimit(vlist_sort, vcnt, s, t, k, res);
+	rinit(res, qcnt);
+	k = k * 2;
+	}
 
 	//S2: k-unvisited
-	kunvisit(vlist, vcnt, s, t, k, res);
+	kunvisit(vlist_sort, vcnt, s, t, k, res);
 
 	//S3: k-reduced
-	kreduce(vlist, vcnt, s, t, k, res);
+	kreduce(vlist_sort, vcnt, s, t, k, res);
 
 }

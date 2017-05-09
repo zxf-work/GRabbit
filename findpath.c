@@ -25,6 +25,8 @@ void findpath(){
 
 
 	Vertex * vlist;
+	Vertex * vlist_sort;
+
 	vlist = (Vertex *)malloc(sizeof(Vertex) * vcnt);
 	for(i = 0; i < vcnt; i++){
 		vlist[i].id = 0;
@@ -34,10 +36,21 @@ void findpath(){
 	dgrcnt(vlist, elist, vcnt, ecnt); //calculate every vertex's degree
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
+	vlist_sort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
+	for(i = 0; i < vcnt; i++){
+		vlist_sort[i].id = 0;
+		vlist_sort[i].dgr = 0;
+		vlist_sort[i].ngb = NULL;
+	}
+	dgrcnt(vlist_sort, elist, vcnt, ecnt); //calculate every vertex's degree
+	adjmaker(vlist_sort, elist, vcnt, ecnt); //make the adjlist
+	adjsort(vlist_sort, vcnt);
+
+
 
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
-	shortpath(vlist, vcnt);
+	shortpath(vlist, vlist_sort, vcnt);
 
 	//cleanup(vlist, elist, vcnt);
 

@@ -115,6 +115,46 @@ void adjmaker(Vertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 
 }
 
+
+
+void quicksort(Vertex * vlist, int * arr, int first, int last){
+    int pivot, j, temp, i;
+
+    if(first < last){
+        pivot = first;
+        i = first;
+        j = last;
+
+        while(i < j){
+            while(vlist[arr[i]].dgr>=vlist[arr[pivot]].dgr && i<last)
+                i++;
+            while(vlist[arr[j]].dgr<vlist[arr[pivot]].dgr)
+                j--;
+            if(i<j){
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        temp = arr[pivot];
+        arr[pivot]=arr[j];
+        arr[j]=temp;
+        quicksort(vlist,arr,first,j-1);
+        quicksort(vlist,arr,j+1,last);
+    }
+}
+
+void adjsort(Vertex * vlist, ul vcnt){
+	ul i = 0;
+
+	for(i = 1; i < vcnt; i++){
+		if(vlist[i].dgr>1)
+		quicksort(vlist, vlist[i].ngb, 0, vlist[i].dgr-1);
+		//printf("%ld: %ld ...\n", i, vlist[i].ngb[0])
+	}
+}
+
 void rinit(Result * res, ul qcnt){
 	ul i = 0;
 	for(i = 0; i < qcnt; i++){
