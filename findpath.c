@@ -15,6 +15,7 @@ void findpath(){
 	ul ecnt;
 	char gfile[16];
 
+
 	readconfig(&vcnt, &ecnt, gfile);
 
 	printf("going to read graph %s, with %ld vertices and %ld edges\n", gfile, vcnt, ecnt);
@@ -35,6 +36,7 @@ void findpath(){
 	}
 	dgrcnt(vlist, elist, vcnt, ecnt); //calculate every vertex's degree
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
+
 
 	vlistsort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
 	for(i = 0; i < vcnt; i++){

@@ -33,44 +33,44 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 
 	//baseline BFS
 	for(i = 0; i < qcnt; i++){
-			s = query[2*i];
-			t = query[2*i+1];
-			bfs(vlist, vcnt, s, t, &res[i]);
-
-	}
-	rinit(res, qcnt);
-
-	ul k = 1;
-	/*
-	while(k<128){
-	printf("\n%ld-limit\n",k);
-
-	for(i = 0; i < qcnt; i++){
 		s = query[2*i];
 		t = query[2*i+1];
-		klimit(vlistsort, vcnt, s, t, k, &res[i]);
-
+		bfs(vlist, vcnt, s, t, &res[i]);
 	}
 	rinit(res, qcnt);
-	k = k * 2;
-	}
-	*/
-
-	//klimit(vlistsort, vcnt, s, t, k, res);
 
 	/*
-	while(k<256){
-	//S1: k-limited
-	klimit(vlistsort, vcnt, s, t, k, res);
-	rinit(res, qcnt);
-	k = k * 2;
+	ul k = 1;
+
+	//S1: k-limit
+	while(k < 128){
+		printf("\n%ld-limit\n",k);
+
+		for(i = 0; i < qcnt; i++){
+			s = query[2*i];
+			t = query[2*i+1];
+			klimit(vlistsort, vcnt, s, t, k, &res[i]);
+
+		}
+		rinit(res, qcnt);
+		k = k * 2;
 	}
 
-	//S2: k-unvisited
-	kunvisit(vlistsort, vcnt, s, t, k, res);
+	k = 1;
 
-	//S3: k-reduced
-	kreduce(vlistsort, vcnt, s, t, k, res);
+	//S2: k-unvisit
+	while(k<128){
+		printf("\n%ld-unvisit\n",k);
+
+		for(i = 0; i < qcnt; i++){
+			s = query[2*i];
+			t = query[2*i+1];
+			kunvisit(vlistsort, vcnt, s, t, k, &res[i]);
+		}
+		rinit(res, qcnt);
+		k = k * 2;
+	}
+
 	*/
 
 }
