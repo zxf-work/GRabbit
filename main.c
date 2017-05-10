@@ -18,7 +18,7 @@ int main(int argc, char ** argv)
 
 	clock_t end = clock();
 
-	float t_total = ((float)(end-begin)/1000000.0F)/1000;
+	float t_total = ((float)(end-begin)/1000000.0F)*1000;
 
 	printf("Rabbit hopping for %f ms, exhausted\n", t_total);
 

@@ -144,7 +144,7 @@ void kunvisithop(ul * arr, ul l, ul k, ul t, Queue * q, char * vcheck, Result * 
 
 
 /*naive bfs is the classic BFS, every step searches the entire front*/
-void naivebfs(Vertex * vlist, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f){
+void naivebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f){
 
 	ul qsl = 0;
 	ul qtl = 0;
@@ -198,19 +198,22 @@ void naivebfs(Vertex * vlist, ul s, ul t, Queue * qs, Queue * qt, char * vcheck,
 		}
 	}
 
-	clock_t end = clock();
 
-	float t_total = ((float)(end-begin)/1000000.0F)/1000;
+		clock_t end = clock();
+			float t_total = ((float)(end-begin)/1000000.0F)*1000;
 
-	r->ttotal += t_total;
+			r->ttotal += t_total;
 
 
-	if(f->hit || f->meet){
-		printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
-	}
-	else{
-		printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
-	}
+			if(f->hit || f->meet){
+				printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+			}
+			else{
+				printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+			}
+
+
+
 }
 
 void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f, ul k){
@@ -280,7 +283,7 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 	clock_t end = clock();
 
 	if(hopcnt < 10){
-		float t_total = ((float)(end-begin)/1000000.0F)/1000;
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
 
 		r->ttotal += t_total;
 
@@ -289,6 +292,7 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
 		}
 		else{
+			r->d = 0;
 			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
 		}
 	}
@@ -365,7 +369,7 @@ void kunvistbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, cha
 	clock_t end = clock();
 
 	if(hopcnt < 10){
-		float t_total = ((float)(end-begin)/1000000.0F)/1000;
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
 
 		r->ttotal += t_total;
 
@@ -374,12 +378,99 @@ void kunvistbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, cha
 			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
 		}
 		else{
+			r->d = 0;
 			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
 		}
 	}
 	else{
 		printf("fall back to naive bfs\n");
 		bfs(vlist, vcnt, r->s, r->t, r);
+	}
+
+}
+
+void kreducebfs(Vertex * vlist, Vertex * vlistmaster, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f){
+	ul qsl = 0;
+	ul qtl = 0;
+	ul hopcnt = 0;
+
+	clock_t begin = clock();
+	while(qs->length != 0 && qt->length != 0 && (!f->hit && !f->meet)){
+
+		// set the range to traverse
+		qsl = qs->length;
+		qtl = qt->length;
+
+		// search from s-side
+		//printf("qsl = %ld\n", qsl);
+		while(!f->hit && !f->meet && qsl != 0){
+			s = qpop(qs);
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
+
+			hop(vlist[s].ngb, vlist[s].dgr, t, qs, vcheck, r, f, 1);
+
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("s-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qsl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("s-side step %ld finished\n", hopcnt);
+		}
+
+		//search from t-side
+		//printf("qtl = %ld\n", qtl);
+		while(!f->hit && !f->meet && qtl != 0){
+			t = qpop(qt);
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
+
+			hop(vlist[t].ngb, vlist[t].dgr, s, qt, vcheck, r, f, 2);
+
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("t-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qtl--;
+		}
+
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("t-side step %ld finished\n", hopcnt);
+		}
+
+		if(hopcnt == 10){
+			break;
+		}
+	}
+
+
+	clock_t end = clock();
+
+	if(hopcnt < 10){
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
+
+		r->ttotal += t_total;
+
+
+		if(f->hit || f->meet){
+			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+		}
+		else{
+			r->d = 0;
+			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+		}
+	}
+	else{
+		printf("fall back to naive bfs\n");
+		bfs(vlistmaster, vcnt, r->s, r->t, r);
 	}
 
 }
@@ -465,7 +556,7 @@ void onebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * 
 
 	clock_t end = clock();
 
-	float t_total = ((float)(end-begin)/1000000.0F)/1000;
+	float t_total = ((float)(end-begin)/1000000.0F)*1000;
 
 	r->ttotal += t_total;
 
@@ -508,7 +599,7 @@ void bfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 	r->t = t;
 	r->vtotal = 2;
 
-	naivebfs(vlist, s, t, qs, qt, vcheck, r, f);
+	naivebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
 
 	//onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
 
@@ -599,8 +690,42 @@ void kunvisit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 }
 
 
-void kreduce(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
+void kreduce(Vertex * vlistreduce, Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 
+	Queue * qs;
+	Queue * qt;
+	Flag * f;
+
+	qs = (Queue*)malloc(sizeof(Queue));
+	qt = (Queue*)malloc(sizeof(Queue));
+	f = (Flag *)malloc(sizeof(Flag));
+
+	f->hit = false;
+	f->meet = false;
+
+	qinit(qs);
+	qinit(qt);
+
+	qadd(qs, s);
+	qadd(qt, t);
+
+	char * vcheck;
+
+	vcheck=(char*)calloc(vcnt,sizeof(char));
+	vcheck[s] = 1;
+	vcheck[t] = 2;
+
+	r->s = s;
+	r->t = t;
+	r->vtotal = 2;
+
+	kreducebfs(vlistreduce, vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	//onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	qclean(qs);
+	qclean(qt);
+	free(vcheck);
 
 
 }

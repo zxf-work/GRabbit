@@ -168,6 +168,57 @@ void rinit(Result * res, ul qcnt){
 		res[i].ttotal = 0.0;
 	}
 }
+
+void report(Result * r1, Result * r2, ul l){
+	FILE * fp;
+	ul i = 0;
+	ul acc[6];
+	ul diff = 0;
+	ul r1vcnt = 0;
+	ul r2vcnt = 0;
+	ul r1ecnt = 0;
+	ul r2ecnt = 0;
+	float r1tcnt = 0.0;
+	float r2tcnt = 0.0;
+
+	for(i = 0; i < 6; i++){
+		acc[i] = 0;
+	}
+
+	fp=fopen("report.txt","a");
+	if(fp==NULL){
+		printf("Failed to export the results\n");
+		exit(1);
+	}
+
+	for(i = 0; i < l; i++){
+		r1vcnt += r1[i].vtotal;
+		r1ecnt += r1[i].etotal;
+		r1tcnt += r1[i].ttotal;
+
+		r2vcnt += r2[i].vtotal;
+		r2ecnt += r2[i].etotal;
+		r2tcnt += r2[i].ttotal;
+
+		if(r2[i].d != 0){
+			diff = r2[i].d - r1[i].d;
+			if(diff < 6){
+				acc[diff] ++;
+			}
+		}
+
+	}
+
+	fprintf(fp,"%ld %ld %f %ld %ld %f ", r1vcnt, r1ecnt, r1tcnt, r2vcnt, r2ecnt, r2tcnt);
+
+	for(i = 0; i < 6; i++){
+		fprintf(fp, "%ld ", acc[i]);
+	}
+	fprintf(fp,"\n");
+
+	fclose(fp);
+
+}
 void cleanup(Vertex * vlist, Edge * elist, ul vcnt){
 	ul i = 0;
 
