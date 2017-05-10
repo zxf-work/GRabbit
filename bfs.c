@@ -8,6 +8,53 @@
 #include"bfs.h"
 
 /** (need to fix) checking if there's shortcuts between unfinished frontiers  **/
+void frontier(Vertex * vlist, Queue * qs, Queue * qt, ul qsl, ul qtl, char * vcheck, Result * r, ul mark){
+	ul i = 0;
+	ul j = 0;
+	ul s = 0;
+	ul t = 0;
+	bool shortcut = false;
+
+	for(i = 0; i < qsl; i++){
+		s = qpop(qs);
+		r->vtotal ++;
+		for(j = 0; j < vlist[s].dgr; j++){
+			t = vlist[s].ngb[j];
+			r->etotal ++;
+			if(vcheck[t] != 0 && vcheck[t] != mark){
+				if(qsearch(qt, qtl, t)){
+					r->d = r->d - 1;
+					shortcut = true;
+					break;
+				}
+			}
+		}
+		if(shortcut)
+			break;
+	}
+}
+
+void checkshortcut(Vertex * vlist, Queue * qs, Queue * qt, ul qsl, ul qtl, char * vcheck, Result * r){
+	ul i = 0;
+	ul j = 0;
+	ul se = 0;
+	ul te = 0;
+
+
+	se = ecntq(vlist, qs, qsl);
+	te = ecntq(vlist, qt, qtl);
+
+	if(se <= te){
+		frontier(vlist, qs, qt, qsl, qtl, vcheck, r, 1);
+	}else{
+		frontier(vlist, qt, qt, qtl, qsl, vcheck, r, 2);
+	}
+
+
+	//frontier(vlist,qs,qt,qsl,qtl,vcheck,r,mark);
+}
+
+
 bool existshortcut(Vertex *vlist, Queue * q, ul l, char * vcheck, ul mark){
 	ul i = 0;
 	ul j = 0;
@@ -180,8 +227,9 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 			s = qpop(qs);
 			//printf("%ld-s-%ld:\t",hopcnt+1,s);
 			if(vlist[s].dgr < k)
-				k = vlist[s].dgr;
-			hop(vlist[s].ngb, k, t, qs, vcheck, r, f, 1);
+				hop(vlist[s].ngb, vlist[s].dgr, t, qs, vcheck, r, f, 1);
+			else
+				hop(vlist[s].ngb, k, t, qs, vcheck, r, f, 1);
 			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
@@ -202,8 +250,9 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 			t = qpop(qt);
 			//printf("%ld-t-%ld:\t",hopcnt+1, t);
 			if(vlist[t].dgr < k)
-				k = vlist[t].dgr;
-			hop(vlist[t].ngb, k, s, qt, vcheck, r, f, 2);
+				hop(vlist[t].ngb, vlist[t].dgr, s, qt, vcheck, r, f, 2);
+			else
+				hop(vlist[t].ngb, k, s, qt, vcheck, r, f, 2);
 			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
@@ -239,7 +288,8 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 		}
 	}
 	else{
-		bfs(vlist, vcnt, s, t, r);
+		printf("fall back to naive bfs\n");
+		bfs(vlist, vcnt, r->s, r->t, r);
 	}
 
 }
@@ -265,65 +315,59 @@ void onebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * 
 
 		//search from s-side
 		s = qpop(qs);
-		printf("%ld-s-%ld:\n",s_hopcnt,s);
+		//printf("%ld-s-%ld:\n",s_hopcnt,s);
 
 		hop(vlist[s].ngb, vlist[s].dgr, t, qs, vcheck, r, f, 1);
-		printf("\n");
+		//printf("\n");
 		if(f->hit || f->meet){
 			if(qsearch(qt, qtl, r->mid))
 				r->d = s_hopcnt + t_hopcnt + 1;
 			else{
-				if(qsl<qtl){
-					if(existshortcut(vlist, qs, qsl, vcheck, 1))
-						r->d = s_hopcnt + t_hopcnt + 1;
-					else
-						r->d = s_hopcnt + t_hopcnt + 2;
-				}else{
-					if(existshortcut(vlist, qt, qtl, vcheck, 2))
-						r->d = s_hopcnt + t_hopcnt + 1;
-					else
-						r->d = s_hopcnt + t_hopcnt + 2;
-				}
-
+				r->d = s_hopcnt + t_hopcnt + 2;
+				//checkshortcut(vlist, qs, qt, qsl, qtl, vcheck, r);
+				frontier(vlist,qs,qt,qsl,qtl,vcheck,r,1);
 			}
-			printf("s-side step %ld break\n", s_hopcnt);
+			//printf("s-side step %ld break\n", s_hopcnt);
 
 			break;
 		}
 		qsl--;
 		if(qsl == 0){
 			if(!f->hit && !f->meet){
-				printf("s-side step %ld finished\n", s_hopcnt );
+				//printf("s-side step %ld finished\n", s_hopcnt );
 				s_hopcnt++;
 
 			}
 			qsl = qs->length;
-			printf("qsl = %ld\n", qsl);
+			//printf("qsl = %ld\n", qsl);
 		}
 
 		//search from t-side
 		t = qpop(qt);
 
-		printf("%ld-t-%ld:\n",t_hopcnt, t);
+		//printf("%ld-t-%ld:\n",t_hopcnt, t);
 		hop(vlist[t].ngb, vlist[t].dgr, s, qt, vcheck, r, f, 2);
-		printf("\n");
+		//printf("\n");
 		if(f->hit || f->meet){
 			if(qsearch(qs, qsl, r->mid))
 				r->d = s_hopcnt + t_hopcnt + 1;
-			else
+			else{
 				r->d = s_hopcnt + t_hopcnt + 2;
-			printf("t-side step %ld break\n", t_hopcnt);
+				//checkshortcut(vlist, qt, qs, qtl, qsl, vcheck, r);
+				frontier(vlist,qt,qs,qtl,qsl,vcheck,r,2);
+			}
+			//printf("t-side step %ld break\n", t_hopcnt);
 
 			break;
 		}
 		qtl--;
 		if(qtl == 0){
 			if(!f->hit && !f->meet){
-				printf("t-side step %ld finished\n", t_hopcnt );
+				//printf("t-side step %ld finished\n", t_hopcnt );
 				t_hopcnt++;
 			}
 			qtl = qt->length;
-			printf("qtl = %ld\n", qtl);
+			//printf("qtl = %ld\n", qtl);
 		}
 
 
@@ -374,9 +418,9 @@ void bfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 	r->t = t;
 	r->vtotal = 2;
 
-	naivebfs(vlist, s, t, qs, qt, vcheck, r, f);
+	//naivebfs(vlist, s, t, qs, qt, vcheck, r, f);
 
-	//onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+	onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
 
 	qclean(qs);
 	qclean(qt);

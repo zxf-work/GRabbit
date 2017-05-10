@@ -41,7 +41,8 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	rinit(res, qcnt);
 
 	ul k = 1;
-
+	/*
+	while(k<128){
 	printf("\n%ld-limit\n",k);
 
 	for(i = 0; i < qcnt; i++){
@@ -51,6 +52,10 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 
 	}
 	rinit(res, qcnt);
+	k = k * 2;
+	}
+	*/
+
 	//klimit(vlistsort, vcnt, s, t, k, res);
 
 	/*

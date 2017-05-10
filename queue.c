@@ -70,6 +70,26 @@ bool qsearch(Queue * q, ul l, ul id){
 	return false;
 }
 
+ul ecntq(Vertex * vlist, Queue * q, ul l){
+	Unit * pt;
+	ul id;
+	ul ecnt = 0;
+	ul i = 0;
+	pt = q->head;
+	while(pt->next != NULL){
+		pt = pt->next;
+		id = pt->id;
+		if(id!=0)
+			ecnt = ecnt + vlist[id].dgr;
+		i++;
+		if(i == l){
+			break;
+		}
+
+	}
+	return ecnt;
+}
+
 void qclean(Queue * q){
 	Unit * pt;
 
