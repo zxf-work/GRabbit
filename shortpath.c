@@ -16,17 +16,20 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	Result * resl;
 	Result * resu;
 	Result * resr;
+	Result * resv;
 
 	query = (ul*)calloc(qcnt*2, sizeof(ul));
 	res = (Result*)malloc(sizeof(Result) * qcnt);
 	resl = (Result*)malloc(sizeof(Result) * qcnt);
 	resu = (Result*)malloc(sizeof(Result) * qcnt);
 	resr = (Result*)malloc(sizeof(Result) * qcnt);
+	resv = (Result*)malloc(sizeof(Result) * qcnt);
 
 	rinit(res, qcnt);
 	rinit(resl, qcnt);
 	rinit(resu, qcnt);
 	rinit(resr, qcnt);
+	rinit(resv, qcnt);
 
 	fp=fopen("stpath-query.txt","r");
 
@@ -41,6 +44,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	ul t = 0;
 
 	//baseline BFS
+	printf("Baseline BFS\n");
 	for(i = 0; i < qcnt; i++){
 		s = query[2*i];
 		t = query[2*i+1];
@@ -48,6 +52,13 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	}
 	//rinit(res, qcnt);
 
+	//one-vertex BFS
+	printf("Vertex-Vertex BFS\n");
+	for(i = 0; i < qcnt; i++){
+		s = query[2*i];
+		t = query[2*i+1];
+		vvbfs(vlist, vcnt, s, t, &(resv[i]));
+		}
 
 	ul k = 1;
 

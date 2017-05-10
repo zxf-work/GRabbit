@@ -608,6 +608,44 @@ void bfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 	free(vcheck);
 }
 
+void vvbfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
+
+	Queue * qs;
+	Queue * qt;
+	Flag * f;
+
+	qs = (Queue*)malloc(sizeof(Queue));
+	qt = (Queue*)malloc(sizeof(Queue));
+	f = (Flag *)malloc(sizeof(Flag));
+
+	f->hit = false;
+	f->meet = false;
+
+	qinit(qs);
+	qinit(qt);
+
+	qadd(qs, s);
+	qadd(qt, t);
+
+	char * vcheck;
+
+	vcheck=(char*)calloc(vcnt,sizeof(char));
+	vcheck[s] = 1;
+	vcheck[t] = 2;
+
+	r->s = s;
+	r->t = t;
+	r->vtotal = 2;
+
+	//naivebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	qclean(qs);
+	qclean(qt);
+	free(vcheck);
+}
+
 void klimit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 	Queue * qs;
 		Queue * qt;
