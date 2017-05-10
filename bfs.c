@@ -44,14 +44,14 @@ void hop(ul * arr, ul l, ul t, Queue * q, char * vcheck, Result * r, Flag * f, u
 		if(vcheck[cur] != 0 && vcheck[cur] != mark){
 			f->meet = true;
 			r->mid = cur;
-			printf("%ld(meet)\n",cur);
+			//printf("%ld(meet)\n",cur);
 			break;
 		}
 		if(vcheck[cur] == 0){
 			vcheck[cur] = mark;
 			r->vtotal++;
 			qadd(q,cur);
-			printf("\t%ld(add)\t",cur);
+			//printf("\t%ld(add)\t",cur);
 		}
 
 	}
@@ -106,15 +106,15 @@ void naivebfs(Vertex * vlist, ul s, ul t, Queue * qs, Queue * qt, char * vcheck,
 		qtl = qt->length;
 
 		// search from s-side
-		printf("qsl = %ld\n", qsl);
+		//printf("qsl = %ld\n", qsl);
 		while(!f->hit && !f->meet && qsl != 0){
 			s = qpop(qs);
-			printf("%ld-s-%ld:\t",hopcnt+1,s);
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
 			hop(vlist[s].ngb, vlist[s].dgr, t, qs, vcheck, r, f, 1);
-			printf("\n");
+			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
-				printf("s-side step %ld break\n", hopcnt);
+				//printf("s-side step %ld break\n", hopcnt);
 				r->d = hopcnt;
 				break;
 			}
@@ -122,19 +122,19 @@ void naivebfs(Vertex * vlist, ul s, ul t, Queue * qs, Queue * qt, char * vcheck,
 		}
 		if(!f->hit && !f->meet){
 			hopcnt++;
-			printf("s-side step %ld finished\n", hopcnt);
+			//printf("s-side step %ld finished\n", hopcnt);
 		}
 
 		//search from t-side
-		printf("qtl = %ld\n", qtl);
+		//printf("qtl = %ld\n", qtl);
 		while(!f->hit && !f->meet && qtl != 0){
 			t = qpop(qt);
-			printf("%ld-t-%ld:\t",hopcnt+1, t);
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
 			hop(vlist[t].ngb, vlist[t].dgr, s, qt, vcheck, r, f, 2);
-			printf("\n");
+			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
-				printf("t-side step %ld break\n", hopcnt);
+				//printf("t-side step %ld break\n", hopcnt);
 				r->d = hopcnt;
 				break;
 			}
@@ -142,7 +142,7 @@ void naivebfs(Vertex * vlist, ul s, ul t, Queue * qs, Queue * qt, char * vcheck,
 		}
 		if(!f->hit && !f->meet){
 			hopcnt++;
-			printf("t-side step %ld finished\n", hopcnt);
+			//printf("t-side step %ld finished\n", hopcnt);
 		}
 	}
 
@@ -175,17 +175,17 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 		qtl = qt->length;
 
 		// search from s-side
-		printf("qsl = %ld\n", qsl);
+		//printf("qsl = %ld\n", qsl);
 		while(!f->hit && !f->meet && qsl != 0){
 			s = qpop(qs);
-			printf("%ld-s-%ld:\t",hopcnt+1,s);
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
 			if(vlist[s].dgr < k)
 				k = vlist[s].dgr;
 			hop(vlist[s].ngb, k, t, qs, vcheck, r, f, 1);
-			printf("\n");
+			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
-				printf("s-side step %ld break\n", hopcnt);
+				//printf("s-side step %ld break\n", hopcnt);
 				r->d = hopcnt;
 				break;
 			}
@@ -193,21 +193,21 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 		}
 		if(!f->hit && !f->meet){
 			hopcnt++;
-			printf("s-side step %ld finished\n", hopcnt);
+			//printf("s-side step %ld finished\n", hopcnt);
 		}
 
 		//search from t-side
-		printf("qtl = %ld\n", qtl);
+		//printf("qtl = %ld\n", qtl);
 		while(!f->hit && !f->meet && qtl != 0){
 			t = qpop(qt);
-			printf("%ld-t-%ld:\t",hopcnt+1, t);
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
 			if(vlist[t].dgr < k)
 				k = vlist[t].dgr;
 			hop(vlist[t].ngb, k, s, qt, vcheck, r, f, 2);
-			printf("\n");
+			//printf("\n");
 			if(f->hit || f->meet){
 				hopcnt++;
-				printf("t-side step %ld break\n", hopcnt);
+				//printf("t-side step %ld break\n", hopcnt);
 				r->d = hopcnt;
 				break;
 			}
@@ -215,7 +215,7 @@ void klimitbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char
 		}
 		if(!f->hit && !f->meet){
 			hopcnt++;
-			printf("t-side step %ld finished\n", hopcnt);
+			//printf("t-side step %ld finished\n", hopcnt);
 		}
 
 		if(hopcnt == 10){
@@ -388,6 +388,8 @@ void klimit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 		Queue * qt;
 		Flag * f;
 
+
+
 		qs = (Queue*)malloc(sizeof(Queue));
 		qt = (Queue*)malloc(sizeof(Queue));
 		f = (Flag *)malloc(sizeof(Flag));
@@ -410,6 +412,7 @@ void klimit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 		r->s = s;
 		r->t = t;
 		r->vtotal = 2;
+
 
 		klimitbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
 

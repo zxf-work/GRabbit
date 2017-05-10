@@ -117,8 +117,8 @@ void adjmaker(Vertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 
 
 
-void quicksort(Vertex * vlist, int * arr, int first, int last){
-    int pivot, j, temp, i;
+void quicksort(Vertex * vlist, ul * arr, ul first, ul last){
+    ul pivot, j, temp, i;
 
     if(first < last){
         pivot = first;
@@ -140,8 +140,10 @@ void quicksort(Vertex * vlist, int * arr, int first, int last){
         temp = arr[pivot];
         arr[pivot]=arr[j];
         arr[j]=temp;
-        quicksort(vlist,arr,first,j-1);
-        quicksort(vlist,arr,j+1,last);
+        if(j >= 1)
+        	quicksort(vlist,arr,first,j-1);
+        if(j < last)
+        	quicksort(vlist,arr,j+1,last);
     }
 }
 
