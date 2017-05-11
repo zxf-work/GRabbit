@@ -58,8 +58,10 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		s = query[2*i];
 		t = query[2*i+1];
 		vvbfs(vlist, vcnt, s, t, &(resv[i]));
-		}
+	}
+	report(res,resv,qcnt);
 
+	/********BFS-K TEST***********
 	ul k = 1;
 
 	//S1: k-limit
@@ -146,7 +148,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		free(elistreduce);
 	}
 
-
+	********************************/
 
 
 }

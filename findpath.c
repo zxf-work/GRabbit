@@ -39,6 +39,7 @@ void findpath(){
 
 
 	vlistsort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
+	/*
 	for(i = 0; i < vcnt; i++){
 		vlistsort[i].id = i;
 		vlistsort[i].dgr = 0;
@@ -48,7 +49,7 @@ void findpath(){
 	adjmaker(vlistsort, elist, vcnt, ecnt); //make the adjlist
 	adjsort(vlistsort, vcnt);
 
-
+	*/
 
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
@@ -59,5 +60,6 @@ void findpath(){
 
 	free(vlist);
 	free(elist);
+	free(vlistsort);
 
 }
