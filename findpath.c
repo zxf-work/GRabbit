@@ -50,10 +50,13 @@ void findpath(){
 	adjsort(vlistsort, vcnt);
 
 	*/
+	
 
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
-	shortpath(vlist, vlistsort, vcnt);
+	ul k = 3;
+	ngbcnt(vlist, vcnt, 3);
+	//shortpath(vlist, vlistsort, vcnt);
 
 	//cleanup(vlist, elist, vcnt);
 

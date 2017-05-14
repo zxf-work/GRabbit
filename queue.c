@@ -90,6 +90,9 @@ ul ecntq(Vertex * vlist, Queue * q, ul l){
 	return ecnt;
 }
 
+ul getqhead(Queue *q){
+	return q->head->next->id;
+}
 void qclean(Queue * q){
 	Unit * pt;
 
@@ -99,6 +102,8 @@ void qclean(Queue * q){
 		q->head->next = pt->next;
 		free(pt);
 	}
+
+
 
 	free(q);
 }
