@@ -725,6 +725,7 @@ void bfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 	free(vcheck);
 }
 
+
 void vvbfs(Vertex * vlist, ul vcnt, ul s, ul t, Result * r){
 
 	Queue * qs;

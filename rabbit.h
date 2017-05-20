@@ -22,6 +22,14 @@ typedef struct v{
 	ul dgr;
 }Vertex;
 
+typedef struct dv{
+    ul id;
+    ul * in;
+    ul * out;
+    ul indgr;
+    ul outdgr;
+}DVertex;
+
 typedef struct e{
 	ul s;
 	ul t;
