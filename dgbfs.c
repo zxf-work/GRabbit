@@ -373,3 +373,40 @@ void dg_drtopt(DVertex * vlist, ul vcnt, ul s, ul t, Result * r){
 }
 
 
+void dg_vvbfs(DVertex * vlist, ul vcnt, ul s, ul t, Result * r){
+
+	Queue * qs;
+	Queue * qt;
+	Flag * f;
+
+	qs = (Queue*)malloc(sizeof(Queue));
+	qt = (Queue*)malloc(sizeof(Queue));
+	f = (Flag *)malloc(sizeof(Flag));
+
+	f->hit = false;
+	f->meet = false;
+
+	qinit(qs);
+	qinit(qt);
+
+	qadd(qs, s);
+	qadd(qt, t);
+
+	char * vcheck;
+
+	vcheck=(char*)calloc(vcnt,sizeof(char));
+	vcheck[s] = 1;
+	vcheck[t] = 2;
+
+	r->s = s;
+	r->t = t;
+	r->vtotal = 2;
+
+	//naivebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	dg_onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+	qclean(qs);
+	qclean(qt);
+	free(vcheck);
+}

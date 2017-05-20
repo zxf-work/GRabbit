@@ -232,7 +232,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 	for(i = 0; i < qcnt; i++){
 		s = query[2*i];
 		t = query[2*i+1];
-		vvbfs(vlist, vcnt, s, t, &(resv[i]));
+		dg_vvbfs(vlist, vcnt, s, t, &(resv[i]));
 	}
 	report(res,resv,qcnt);
 
