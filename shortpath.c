@@ -238,7 +238,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 
 
 
-	/********BFS-K TEST***********
+	/********BFS-K TEST***********/
 	ul k = 1;
 
 	//S1: k-limit
@@ -248,7 +248,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 		for(i = 0; i < qcnt; i++){
 			s = query[2*i];
 			t = query[2*i+1];
-			klimit(vlistsort, vcnt, s, t, k, &(resl[i]));
+			dg_klimit(vlistsort, vcnt, s, t, k, &(resl[i]));
 
 		}
 		report(res,resl,qcnt);
@@ -265,7 +265,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 		for(i = 0; i < qcnt; i++){
 			s = query[2*i];
 			t = query[2*i+1];
-			kunvisit(vlistsort, vcnt, s, t, k, &(resu[i]));
+			dg_kunvisit(vlistsort, vcnt, s, t, k, &(resu[i]));
 		}
 		report(res,resu,qcnt);
 		rinit(resu, qcnt);
@@ -290,7 +290,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 	Vertex * vlistreduce;
 
 	//S3: k-reduce
-
+	/*
 	while(k<128){
 
 		fscanf(fp,"%s",gfile);

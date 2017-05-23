@@ -55,7 +55,7 @@ void ug_findpath(){
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
 	ul k = 4;
-	ngbcnt(vlist, vcnt, k);
+	//ngbcnt(vlist, vcnt, k);
 	//shortpath(vlist, vlistsort, vcnt);
 
 	//cleanup(vlist, elist, vcnt);
@@ -113,8 +113,6 @@ void dg_findpath(){
 	dg_adjsort(vlistsort, vcnt);
 
 	
-
-
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
 	/*********

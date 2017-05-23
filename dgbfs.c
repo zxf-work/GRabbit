@@ -410,3 +410,265 @@ void dg_vvbfs(DVertex * vlist, ul vcnt, ul s, ul t, Result * r){
 	qclean(qt);
 	free(vcheck);
 }
+
+
+void dg_klimitbfs(DVertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f, ul k){
+
+	ul qsl = 0;
+	ul qtl = 0;
+	ul hopcnt = 0;
+
+	clock_t begin = clock();
+	while(qs->length != 0 && qt->length != 0 && (!f->hit && !f->meet)){
+
+		// set the range to traverse
+		qsl = qs->length;
+		qtl = qt->length;
+
+		// search from s-side
+		//printf("qsl = %ld\n", qsl);
+		while(!f->hit && !f->meet && qsl != 0){
+			s = qpop(qs);
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
+			if(vlist[s].outdgr < k)
+				hop(vlist[s].out, vlist[s].outdgr, t, qs, vcheck, r, f, 1);
+			else
+				hop(vlist[s].out, k, t, qs, vcheck, r, f, 1);
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("s-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qsl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("s-side step %ld finished\n", hopcnt);
+		}
+
+		//search from t-side
+		//printf("qtl = %ld\n", qtl);
+		while(!f->hit && !f->meet && qtl != 0){
+			t = qpop(qt);
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
+			if(vlist[t].indgr < k)
+				hop(vlist[t].in, vlist[t].indgr, s, qt, vcheck, r, f, 2);
+			else
+				hop(vlist[t].in, k, s, qt, vcheck, r, f, 2);
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("t-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qtl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("t-side step %ld finished\n", hopcnt);
+		}
+
+		if(hopcnt == 10){
+			break;
+		}
+	}
+
+	clock_t end = clock();
+
+	if(hopcnt < 10){
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
+
+		r->ttotal += t_total;
+
+
+		if(f->hit || f->meet){
+			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+		}
+		else{
+			r->d = 0;
+			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+		}
+	}
+	else{
+		printf("fall back to naive bfs\n");
+		dg_bfs(vlist, vcnt, r->s, r->t, r);
+	}
+
+}
+
+
+void dg_klimit(DVertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
+	Queue * qs;
+		Queue * qt;
+		Flag * f;
+
+
+
+		qs = (Queue*)malloc(sizeof(Queue));
+		qt = (Queue*)malloc(sizeof(Queue));
+		f = (Flag *)malloc(sizeof(Flag));
+
+		f->hit = false;
+		f->meet = false;
+
+		qinit(qs);
+		qinit(qt);
+
+		qadd(qs, s);
+		qadd(qt, t);
+
+		char * vcheck;
+
+		vcheck=(char*)calloc(vcnt,sizeof(char));
+		vcheck[s] = 1;
+		vcheck[t] = 2;
+
+		r->s = s;
+		r->t = t;
+		r->vtotal = 2;
+
+
+		dg_klimitbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
+
+		//onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+		qclean(qs);
+		qclean(qt);
+		free(vcheck);
+
+}
+
+
+
+
+void dg_kunvistbfs(DVertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f, ul k){
+	ul qsl = 0;
+	ul qtl = 0;
+	ul hopcnt = 0;
+
+	clock_t begin = clock();
+	while(qs->length != 0 && qt->length != 0 && (!f->hit && !f->meet)){
+
+		// set the range to traverse
+		qsl = qs->length;
+		qtl = qt->length;
+
+		// search from s-side
+		//printf("qsl = %ld\n", qsl);
+		while(!f->hit && !f->meet && qsl != 0){
+			s = qpop(qs);
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
+
+			kunvisithop(vlist[s].out, vlist[s].outdgr, k, t, qs, vcheck, r, f, 1);
+
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("s-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qsl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("s-side step %ld finished\n", hopcnt);
+		}
+
+		//search from t-side
+		//printf("qtl = %ld\n", qtl);
+		while(!f->hit && !f->meet && qtl != 0){
+			t = qpop(qt);
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
+
+			kunvisithop(vlist[t].in, vlist[t].indgr, k, s, qt, vcheck, r, f, 2);
+
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("t-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				break;
+			}
+			qtl--;
+		}
+
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("t-side step %ld finished\n", hopcnt);
+		}
+
+		if(hopcnt == 10){
+			break;
+		}
+	}
+
+
+	clock_t end = clock();
+
+	if(hopcnt < 10){
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
+
+		r->ttotal += t_total;
+
+
+		if(f->hit || f->meet){
+			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+		}
+		else{
+			r->d = 0;
+			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+		}
+	}
+	else{
+		printf("fall back to naive bfs\n");
+		dg_bfs(vlist, vcnt, r->s, r->t, r);
+	}
+
+}
+
+
+void dg_kunvisit(DVertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
+	Queue * qs;
+	Queue * qt;
+	Flag * f;
+
+
+
+	qs = (Queue*)malloc(sizeof(Queue));
+	qt = (Queue*)malloc(sizeof(Queue));
+	f = (Flag *)malloc(sizeof(Flag));
+
+	f->hit = false;
+	f->meet = false;
+
+	qinit(qs);
+	qinit(qt);
+
+	qadd(qs, s);
+	qadd(qt, t);
+
+	char * vcheck;
+
+	vcheck=(char*)calloc(vcnt,sizeof(char));
+	vcheck[s] = 1;
+	vcheck[t] = 2;
+
+	r->s = s;
+	r->t = t;
+	r->vtotal = 2;
+
+
+	dg_kunvistbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
+
+	qclean(qs);
+	qclean(qt);
+	free(vcheck);
+
+
+}
+
+
