@@ -39,7 +39,7 @@ void ug_findpath(){
 
 
 	vlistsort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
-	/*
+
 	for(i = 0; i < vcnt; i++){
 		vlistsort[i].id = i;
 		vlistsort[i].dgr = 0;
@@ -49,14 +49,14 @@ void ug_findpath(){
 	adjmaker(vlistsort, elist, vcnt, ecnt); //make the adjlist
 	adjsort(vlistsort, vcnt);
 
-	*/
+
 
 
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
 	ul k = 4;
 	//ngbcnt(vlist, vcnt, k);
-	//shortpath(vlist, vlistsort, vcnt);
+	shortpath(vlist, vlistsort, vcnt);
 
 	//cleanup(vlist, elist, vcnt);
 

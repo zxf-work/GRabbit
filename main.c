@@ -16,9 +16,9 @@ int main(int argc, char ** argv)
 
 	//findpath_u();
 
-	//ug_findpath();
+	ug_findpath();
 
-	dg_findpath();
+	//dg_findpath();
 
 	clock_t end = clock();
 

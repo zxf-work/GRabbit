@@ -76,7 +76,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 
 
 
-	/********BFS-K TEST***********
+	/********BFS-K TEST***********/
 	ul k = 1;
 
 	//S1: k-limit
@@ -163,7 +163,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		free(elistreduce);
 	}
 
-	********************************/
+	/********************************/
 
 
 }
@@ -273,7 +273,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 		k = k * 2;
 	}
 
-
+	/*
 	k = 1;
 	fp = fopen("graph.cfg","r");
 	char gfile[32];
@@ -290,7 +290,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 	Vertex * vlistreduce;
 
 	//S3: k-reduce
-	/*
+
 	while(k<128){
 
 		fscanf(fp,"%s",gfile);

@@ -423,10 +423,44 @@ void report(Result * r1, Result * r2, ul l){
 
 	fprintf(fp,"%ld %ld %f %ld %ld %f ", r1vcnt, r1ecnt, r1tcnt, r2vcnt, r2ecnt, r2tcnt);
 
+
 	for(i = 0; i < 6; i++){
 		fprintf(fp, "%ld ", acc[i]);
+		acc[i] = 0;
 	}
 	fprintf(fp,"\n");
+
+
+	ul j;
+	ul k;
+	for(i = 1; i < 11; i++){
+		r1vcnt = 0;
+		r1ecnt = 0;
+		r1tcnt = 0;
+
+		r2vcnt = 0;
+		r2ecnt = 0;
+		r2tcnt = 0;
+		for (j = 0; j < l; j++){
+			if (r1[j].d == i){
+				r1vcnt += r1[j].vtotal;
+				r1ecnt += r1[j].etotal;
+				r1tcnt += r1[j].ttotal;
+
+				r2vcnt += r2[j].vtotal;
+				r2ecnt += r2[j].etotal;
+				r2tcnt += r2[j].ttotal;
+				acc[r2[j].d-r1[j].d]++;
+			}
+
+		}
+		fprintf(fp,"dist = %ld: %ld %ld %f %ld %ld %f ", i, r1vcnt, r1ecnt, r1tcnt, r2vcnt, r2ecnt, r2tcnt);
+		for(k = 0; k < 6; k++){
+			fprintf(fp, "%ld ", acc[k]);
+			acc[k] = 0;
+		}
+		fprintf(fp,"\n");
+	}
 
 	fclose(fp);
 
