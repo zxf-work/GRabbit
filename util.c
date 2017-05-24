@@ -289,10 +289,12 @@ void dg_out_merge(DVertex * vlist, ul *arr, ul size1, ul size2) {
 
       while (ptr1+ptr2 < size1+size2) {
 	      if ((ptr1 < size1 && vlist[ptr1].outdgr <= vlist[size1+ptr2].outdgr) || (ptr1 < size1 && ptr2 >= size2))
-	              temp[ptr1+ptr2] = arr[ptr1++];
+	              //temp[ptr1+ptr2] = arr[ptr1++];
+	      	  	  temp[ptr1+ptr2] = arr[size1+ptr2++];
 
 	      if ((ptr2 < size2 && vlist[size1+ptr2].outdgr < vlist[ptr1].outdgr) || (ptr2 < size2 && ptr1 >= size1))
-	              temp[ptr1+ptr2] = arr[size1+ptr2++];
+	              //temp[ptr1+ptr2] = arr[size1+ptr2++];
+	    	  	  temp[ptr1+ptr2] = arr[ptr1++];
       }
       ul i = 0;
 
@@ -318,10 +320,12 @@ void dg_in_merge(DVertex * vlist, ul *arr, ul size1, ul size2) {
 
       while (ptr1+ptr2 < size1+size2) {
 	      if ((ptr1 < size1 && vlist[ptr1].indgr <= vlist[size1+ptr2].indgr) || (ptr1 < size1 && ptr2 >= size2))
-	              temp[ptr1+ptr2] = arr[ptr1++];
+	              //temp[ptr1+ptr2] = arr[ptr1++];
+	      	  temp[ptr1+ptr2] = arr[size1+ptr2++];
 
 	      if ((ptr2 < size2 && vlist[size1+ptr2].indgr < vlist[ptr1].indgr) || (ptr2 < size2 && ptr1 >= size1))
-	              temp[ptr1+ptr2] = arr[size1+ptr2++];
+	              //temp[ptr1+ptr2] = arr[size1+ptr2++];
+	      	  temp[ptr1+ptr2] = arr[ptr1++];
       }
       ul i = 0;
 
@@ -342,18 +346,28 @@ void dg_in_mergesort(DVertex * vlist, ul *arr, ul size) {
 
 void dg_adjsort(DVertex * vlist, ul vcnt){
 	ul i = 0;
-
+	ul j = 0;
 	for(i = 1; i < vcnt; i++){
 		if(vlist[i].outdgr > 1){
-			//dg_out_quicksort(vlist,vlist[i].out, 0, vlist[i].outdgr-1);
-			dg_out_mergesort(vlist, vlist[i].out, vlist[i].outdgr);
+			dg_out_quicksort(vlist,vlist[i].out, 0, vlist[i].outdgr-1);
+			//dg_out_mergesort(vlist, vlist[i].out, vlist[i].outdgr);
+			/*
+			printf("%ld : ", i);
+			for(j=0;j<vlist[i].outdgr;j++){
+				printf("%ld[%ld] ",vlist[i].out[j],vlist[vlist[i].out[j]].outdgr);
+			}
+			printf("\n");
+			getchar();
+			*/
 		}
 		if(vlist[i].indgr > 1){
-			//dg_in_quicksort(vlist,vlist[i].in, 0, vlist[i].indgr-1);
-			dg_in_mergesort(vlist, vlist[i].in, vlist[i].indgr);
+			dg_in_quicksort(vlist,vlist[i].in, 0, vlist[i].indgr-1);
+			//dg_in_mergesort(vlist, vlist[i].in, vlist[i].indgr);
 		}
 	}
 }
+
+
 
 void rinit(Result * res, ul qcnt){
 	ul i = 0;
