@@ -8,7 +8,7 @@
 
 #include"rabbit.h"
 
-void ug_findpath(){
+void ugfindpath(){
 
 	ul i = 0;
 	ul vcnt;
@@ -67,7 +67,7 @@ void ug_findpath(){
 
 }
 
-void dg_findpath(){
+void dgfindpath(){
 
 	ul i = 0;
 	ul vcnt;

@@ -122,7 +122,7 @@ void getedge(Vertex * vlist, ul * arr, ul off, Queue * q, char * vcheck, Result 
 		vcheck[cur] = mark;
 		r->vtotal++;
 		qadd(q,cur);
-
+		//(*frt)++;
 	}
 
 }
@@ -981,6 +981,10 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 	ul t_hopcnt = 0;
 	ul s_off = 0;
 	ul t_off = 0;
+	ul sfrt = 0;
+	ul tfrt = 0;
+
+
 
 	//char * hopcheck;
 	//hopcheck=(char *)calloc(vcnt,sizeof(char));
@@ -996,21 +1000,23 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 		//search from s-side
 		if(s_off == 0){
 			s = qpop(qs);
-			qsl--;
+
 		}
 		if(s_off<vlist[s].dgr){
 			getedge(vlist,vlist[s].ngb,s_off,qs,vcheck,r,f,1);
 			s_off++;
 			if(f->hit || f->meet){
-				if(qsearch(qs, qsl, r->mid))
-					r->d = s_hopcnt + t_hopcnt + 1;
-				else
+				if(qsearch(qt, qtl, r->mid))
 					r->d = s_hopcnt + t_hopcnt + 2;
+				else
+					r->d = s_hopcnt + t_hopcnt + 3;
 				break;
 			}
 		}
-		if(s_off == vlist[s].dgr)
+		if(s_off == vlist[s].dgr){
 			s_off = 0;
+			qsl--;
+		}
 		if(qsl == 0){
 			if(!f->hit && !f->meet){
 				s_hopcnt++;
@@ -1021,21 +1027,23 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 
 		if(t_off==0 && qt->length!=0){
 			t = qpop(qt);
-			qtl--;
+
 		}
 		if(t_off<vlist[t].dgr){
 			getedge(vlist,vlist[t].ngb,t_off,qt,vcheck,r,f,2);
 			t_off++;
 			if(f->hit || f->meet){
 				if(qsearch(qs, qsl, r->mid))
-					r->d = s_hopcnt + t_hopcnt + 1;
-				else
 					r->d = s_hopcnt + t_hopcnt + 2;
+				else
+					r->d = s_hopcnt + t_hopcnt + 3;
 				break;
 			}
 		}
-		if(t_off == vlist[t].dgr)
+		if(t_off == vlist[t].dgr){
 			t_off = 0;
+			qtl--;
+		}
 		if(qtl == 0){
 			if(!f->hit && !f->meet){
 				t_hopcnt++;

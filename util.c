@@ -465,8 +465,8 @@ void report(Result * r1, Result * r2, ul l){
 	}
 	fprintf(fp,"\n");
 
-	/*
 
+	/*
 	ul j;
 	ul k;
 	for(i = 1; i < 11; i++){
