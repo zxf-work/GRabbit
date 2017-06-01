@@ -45,4 +45,9 @@ typedef struct r{
 	float ttotal;
 }Result;
 
+typedef struct n{
+    long id;
+    long dgr;
+}nb;
+
 #endif /* RABBIT_H_ */

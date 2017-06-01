@@ -18,6 +18,8 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	Result * resr;
 	Result * resv;
 	Result * resd;
+	Result * resdv;
+	Result * resee;
 
 	query = (ul*)calloc(qcnt*2, sizeof(ul));
 	res = (Result*)malloc(sizeof(Result) * qcnt);
@@ -26,6 +28,8 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	resr = (Result*)malloc(sizeof(Result) * qcnt);
 	resv = (Result*)malloc(sizeof(Result) * qcnt);
 	resd = (Result*)malloc(sizeof(Result) * qcnt);
+	resdv = (Result*)malloc(sizeof(Result) * qcnt);
+	resee = (Result*)malloc(sizeof(Result) * qcnt);
 
 	rinit(res, qcnt);
 	rinit(resl, qcnt);
@@ -33,6 +37,8 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	rinit(resr, qcnt);
 	rinit(resv, qcnt);
 	rinit(resd, qcnt);
+	rinit(resdv, qcnt);
+	rinit(resee, qcnt);
 
 
 	fp=fopen("stpath-query.txt","r");
@@ -74,9 +80,25 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	}
 	report(res,resv,qcnt);
 
+	//direction first one-vertex BFS
+	printf("Drt-VV BFS\n");
+	for(i = 0; i < qcnt; i++){
+		s = query[2*i];
+		t = query[2*i+1];
+		dv(vlist, vcnt, s, t, &(resdv[i]));
+	}
+	report(res,resdv,qcnt);
 
+	//edge-by-edge BFS
+	printf("Edge-by-Edge BFS\n");
+	for(i = 0; i < qcnt; i++){
+		s = query[2*i];
+		t = query[2*i+1];
+		ee(vlist, vcnt, s, t, &(resee[i]));
+	}
+	report(res,resee,qcnt);
 
-	/********BFS-K TEST***********/
+	/********BFS-K TEST***********
 	ul k = 1;
 
 	//S1: k-limit
@@ -163,7 +185,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		free(elistreduce);
 	}
 
-	/********************************/
+	********************************/
 
 
 }

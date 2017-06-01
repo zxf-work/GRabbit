@@ -52,7 +52,7 @@ void ug_findpath(){
 
 
 
-	printf("Rabbit gets ready ... starts hopping ...\n");
+	printf("\nRabbit gets ready ... starts hopping ...\n");
 
 	ul k = 4;
 	//ngbcnt(vlist, vcnt, k);

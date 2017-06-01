@@ -270,17 +270,52 @@ void dg_in_quicksort(DVertex * vlist, ul * arr, ul first, ul last){
     }
 }
 
+int cmpfunc(const void * a, const void * b){
+    nb  x = *(const nb *)a;
+    nb  y = *(const nb *)b;
 
+    if(x.dgr<y.dgr)
+        return 1;
+    else if(x.dgr>y.dgr)
+        return -1;
+
+    return 0;
+}
+
+void sort(Vertex * vlist, ul * ngb, ul l){
+	nb * arr;
+	    arr=(nb*)malloc(sizeof(nb)*l);
+	    long i;
+	    for(i=0;i<l;i++){
+	        arr[i].id=ngb[i];
+	        arr[i].dgr=vlist[ngb[i]].dgr;
+	    }
+	    qsort(arr,l,sizeof(nb),cmpfunc);
+	    for(i=0;i<l;i++){
+	        ngb[i]=arr[i].id;
+	    }
+	    free(arr);
+}
 
 void adjsort(Vertex * vlist, ul vcnt){
 	ul i = 0;
+	ul scale = vcnt/100;
 
+	ul u = 0;
+	printf("Sorting neighbors...\n ");
 	for(i = 1; i < vcnt; i++){
+		if(i%scale == 0)
+			printf("<%ld>\n",u++);
+
+
 		if(vlist[i].dgr>1)
-		quicksort(vlist, vlist[i].ngb, 0, vlist[i].dgr-1);
+			sort(vlist, vlist[i].ngb, vlist[i].dgr);
+		//quicksort(vlist, vlist[i].ngb, 0, vlist[i].dgr-1);
 		//printf("%ld: %ld ...\n", i, vlist[i].ngb[0])
 	}
 }
+
+
 
 void dg_out_merge(DVertex * vlist, ul *arr, ul size1, ul size2) {
       ul temp[size1+size2];
@@ -430,6 +465,7 @@ void report(Result * r1, Result * r2, ul l){
 	}
 	fprintf(fp,"\n");
 
+	/*
 
 	ul j;
 	ul k;
@@ -461,7 +497,7 @@ void report(Result * r1, Result * r2, ul l){
 		}
 		fprintf(fp,"\n");
 	}
-
+	*/
 	fclose(fp);
 
 }
