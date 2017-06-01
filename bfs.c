@@ -108,7 +108,7 @@ void getedge(Vertex * vlist, ul * arr, ul off, Queue * q, char * vcheck, Result 
 	ul cur = 0;
 	cur = arr[off];
 	r->etotal++;
-	if((cur == r->t ) || (cur == r->s )){
+	if((mark == 1 && cur == r->t ) || (mark == 2 && cur == r->s )){
 		f->hit = true;
 
 	}
@@ -999,7 +999,7 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 
 		//search from s-side
 		if(s_off == 0){
-			s = qpop(qs);
+			s = getqhead(qs);
 
 		}
 		if(s_off<vlist[s].dgr){
@@ -1007,14 +1007,15 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 			s_off++;
 			if(f->hit || f->meet){
 				if(qsearch(qt, qtl, r->mid))
-					r->d = s_hopcnt + t_hopcnt + 2;
+					r->d = s_hopcnt + t_hopcnt + 1;
 				else
-					r->d = s_hopcnt + t_hopcnt + 3;
+					r->d = s_hopcnt + t_hopcnt + 2;
 				break;
 			}
 		}
 		if(s_off == vlist[s].dgr){
 			s_off = 0;
+			s=qpop(qs);
 			qsl--;
 		}
 		if(qsl == 0){
@@ -1026,7 +1027,7 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 		}
 
 		if(t_off==0 && qt->length!=0){
-			t = qpop(qt);
+			t = getqhead(qt);
 
 		}
 		if(t_off<vlist[t].dgr){
@@ -1034,14 +1035,15 @@ void eebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * v
 			t_off++;
 			if(f->hit || f->meet){
 				if(qsearch(qs, qsl, r->mid))
-					r->d = s_hopcnt + t_hopcnt + 2;
+					r->d = s_hopcnt + t_hopcnt + 1;
 				else
-					r->d = s_hopcnt + t_hopcnt + 3;
+					r->d = s_hopcnt + t_hopcnt + 2;
 				break;
 			}
 		}
 		if(t_off == vlist[t].dgr){
 			t_off = 0;
+			t=qpop(qt);
 			qtl--;
 		}
 		if(qtl == 0){

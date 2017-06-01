@@ -80,6 +80,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	}
 	report(res,resv,qcnt);
 
+	/*
 	//direction first one-vertex BFS
 	printf("Drt-VV BFS\n");
 	for(i = 0; i < qcnt; i++){
@@ -88,7 +89,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		dv(vlist, vcnt, s, t, &(resdv[i]));
 	}
 	report(res,resdv,qcnt);
-
+	*/
 
 	//edge-by-edge BFS
 	printf("Edge-by-Edge BFS\n");
