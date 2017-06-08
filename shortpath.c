@@ -100,11 +100,11 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	}
 	report(res,resee,qcnt);
 
-	/********BFS-K TEST***********
+	/********BFS-K TEST***********/
 	ul k = 1;
 
 	//S1: k-limit
-	while(k < 128){
+	while(k < 1024){
 		printf("\n%ld-limit\n",k);
 
 		for(i = 0; i < qcnt; i++){
@@ -118,6 +118,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		k = k * 2;
 	}
 
+	/*
 	k = 1;
 
 	//S2: k-unvisit
@@ -251,6 +252,7 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 	}
 	report(res, resd, qcnt);
 
+	/*
 	//one-vertex BFS
 	printf("Vertex-Vertex BFS\n");
 	for(i = 0; i < qcnt; i++){
@@ -260,9 +262,9 @@ void dg_shortpath(DVertex * vlist, DVertex * vlistsort, ul vcnt) {
 	}
 	report(res,resv,qcnt);
 
+	*/
 
-
-	/********BFS-K TEST***********/
+	/********BFS-K TEST***********
 	ul k = 1;
 
 	//S1: k-limit
