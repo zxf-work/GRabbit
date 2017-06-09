@@ -71,7 +71,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	}
 	report(res, resd, qcnt);
 
-	//one-vertex BFS
+	/*one-vertex BFS
 	printf("Vertex-Vertex BFS\n");
 	for(i = 0; i < qcnt; i++){
 		s = query[2*i];
@@ -79,7 +79,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		vvbfs(vlist, vcnt, s, t, &(resv[i]));
 	}
 	report(res,resv,qcnt);
-
+	*/
 	/*
 	//direction first one-vertex BFS
 	printf("Drt-VV BFS\n");
@@ -104,7 +104,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	ul k = 1;
 
 	//S1: k-limit
-	while(k < 1024){
+	while(k < 2048){
 		printf("\n%ld-limit\n",k);
 
 		for(i = 0; i < qcnt; i++){
@@ -118,11 +118,11 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		k = k * 2;
 	}
 
-	/*
+
 	k = 1;
 
 	//S2: k-unvisit
-	while(k<128){
+	while(k<2048){
 		printf("\n%ld-unvisit\n",k);
 
 		for(i = 0; i < qcnt; i++){
@@ -136,7 +136,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		k = k * 2;
 	}
 
-
+	/*
 	k = 1;
 	fp = fopen("graph.cfg","r");
 	char gfile[32];

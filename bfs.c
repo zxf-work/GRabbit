@@ -626,6 +626,160 @@ void kunvistbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, cha
 
 }
 
+
+void kunvisteebfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f, ul k){
+	ul qsl = 0;
+	ul qtl = 0;
+	ul hopcnt = 0;
+	ul cur = 0;
+	ul s_min = k;
+	ul t_min = k;
+	ul s_hopcnt = 0;
+	ul t_hopcnt = 0;
+	ul s_off = 0;
+	ul t_off = 0;
+	ul s_visitcnt = 0;
+	ul t_visitcnt = 0;
+
+	qsl = qs->length;
+	qtl = qt->length;
+
+	clock_t begin = clock();
+		while(qs->length != 0 && qt->length != 0 && (!f->hit && !f->meet)){
+
+			//search from s-side
+			if(s_off == 0){
+				s = getqhead(qs);
+				if(vlist[s].dgr<k)
+					s_min=vlist[s].dgr;
+			}
+
+			if(s_off< vlist[s].dgr){
+				//getedge(vlist,vlist[s].ngb,s_off,qs,vcheck,r,f,1);
+				/** Inline getedge function**/
+				cur = 0;
+				cur = vlist[s].ngb[s_off];
+				r->etotal++;
+				if( cur == r->t ){
+					f->hit = true;
+
+				}
+				if(vcheck[cur] != 0 && vcheck[cur] != 1){
+					f->meet = true;
+					r->mid = cur;
+					//printf("%ld(meet)\n",cur);
+
+				}
+				if(vcheck[cur] == 0){
+					vcheck[cur] = 1;
+					r->vtotal++;
+					qadd(qs,cur);
+					//(*frt)++;
+					s_visitcnt++;
+				}
+				/**end of inline getedge**/
+
+				s_off++;
+				if(f->hit || f->meet){
+					if(qsearch(qt, qtl, r->mid))
+						r->d = s_hopcnt + t_hopcnt + 1;
+					else
+						r->d = s_hopcnt + t_hopcnt + 2;
+					break;
+				}
+			}
+			if(s_off == vlist[s].dgr || s_visitcnt == s_min){
+				s_off = 0;
+				s_visitcnt = 0;
+				s=qpop(qs);
+				qsl--;
+			}
+			if(qsl == 0){
+				if(!f->hit && !f->meet){
+					s_hopcnt++;
+				}
+				qsl = qs->length;
+				//printf("qsl = %ld\n", qsl);
+			}
+
+			//search from t-side
+			if(t_off==0){
+				t = getqhead(qt);
+				if(vlist[t].dgr<k)
+					t_min=vlist[t].dgr;
+
+			}
+			if(t_off<vlist[t].dgr){
+				//getedge(vlist,vlist[t].ngb,t_off,qt,vcheck,r,f,2);
+				/**begin of inline getedge function**/
+				cur = 0;
+				cur = vlist[t].ngb[t_off];
+				r->etotal++;
+				if( cur == r->s ){
+					f->hit = true;
+
+				}
+				if(vcheck[cur] != 0 && vcheck[cur] != 2){
+					f->meet = true;
+					r->mid = cur;
+					//printf("%ld(meet)\n",cur);
+
+				}
+				if(vcheck[cur] == 0){
+					vcheck[cur] = 2;
+					r->vtotal++;
+					qadd(qt,cur);
+					//(*frt)++;
+					t_visitcnt++;
+				}
+				/**end of inline getedge**/
+
+				t_off++;
+				if(f->hit || f->meet){
+					if(qsearch(qs, qsl, r->mid))
+						r->d = s_hopcnt + t_hopcnt + 1;
+					else
+						r->d = s_hopcnt + t_hopcnt + 2;
+					break;
+				}
+			}
+			if(t_off == vlist[t].dgr || t_visitcnt == t_min){
+				t_off = 0;
+				t_visitcnt = 0;
+				t=qpop(qt);
+				qtl--;
+			}
+			if(qtl == 0){
+				if(!f->hit && !f->meet){
+					t_hopcnt++;
+				}
+				qtl = qt->length;
+			}
+		}
+
+		clock_t end = clock();
+
+	if(hopcnt < 10){
+		float t_total = ((float)(end-begin)/1000000.0F)*1000;
+
+		r->ttotal += t_total;
+
+
+		if(f->hit || f->meet){
+			printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+		}
+		else{
+			r->d = 0;
+			printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+		}
+	}
+	else{
+		printf("fall back to naive bfs\n");
+		bfs(vlist, vcnt, r->s, r->t, r);
+	}
+
+}
+
 void kreducebfs(Vertex * vlist, Vertex * vlistmaster, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f){
 	ul qsl = 0;
 	ul qtl = 0;
@@ -1334,7 +1488,8 @@ void kunvisit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 	r->vtotal = 2;
 
 
-	kunvistbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
+	//kunvistbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
+	kunvisteebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
 
 	qclean(qs);
 	qclean(qt);
