@@ -7,7 +7,7 @@
 
 #include"rabbit.h"
 
-void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
+void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 
 	FILE * fp;
 	ul qcnt = 1000;
@@ -20,6 +20,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	Result * resd;
 	Result * resdv;
 	Result * resee;
+	Result * reslm;
 
 	query = (ul*)calloc(qcnt*2, sizeof(ul));
 	res = (Result*)malloc(sizeof(Result) * qcnt);
@@ -30,6 +31,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	resd = (Result*)malloc(sizeof(Result) * qcnt);
 	resdv = (Result*)malloc(sizeof(Result) * qcnt);
 	resee = (Result*)malloc(sizeof(Result) * qcnt);
+	reslm = (Result*)malloc(sizeof(Result) * qcnt);
 
 	rinit(res, qcnt);
 	rinit(resl, qcnt);
@@ -39,6 +41,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	rinit(resd, qcnt);
 	rinit(resdv, qcnt);
 	rinit(resee, qcnt);
+	rinit(reslm, qcnt);
 
 
 	fp=fopen("stpath-query.txt","r");
@@ -61,6 +64,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		bfs(vlist, vcnt, s, t, &(res[i]));
 	}
 	//rinit(res, qcnt);
+
 
 	//direction optimized BFS
 	printf("Direction optimized BFS\n");
@@ -101,8 +105,9 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 	report(res,resee,qcnt);
 
 	/********BFS-K TEST***********/
-	ul k = 1;
 
+	ul k = 1;
+	/*
 	//S1: k-limit
 	while(k < 2048){
 		printf("\n%ld-limit\n",k);
@@ -136,6 +141,23 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, ul vcnt) {
 		k = k * 2;
 	}
 
+
+	*/
+	k = 1;
+
+	while(k<256){
+		printf("\n%ld-bfstree\n",k);
+
+		for(i = 0; i < qcnt; i++){
+			s = query[2*i];
+			t = query[2*i+1];
+			ktree(vlist, bfstree, vcnt, s, t, k, &(resu[i]));
+		}
+		report(res,resu,qcnt);
+		rinit(resu, qcnt);
+
+		k = k * 2;
+	}
 	/*
 	k = 1;
 	fp = fopen("graph.cfg","r");

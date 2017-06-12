@@ -38,6 +38,7 @@ void ugfindpath(){
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
 
+
 	vlistsort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
 
 	for(i = 0; i < vcnt; i++){
@@ -49,14 +50,32 @@ void ugfindpath(){
 	adjmaker(vlistsort, elist, vcnt, ecnt); //make the adjlist
 	adjsort(vlistsort, vcnt);
 
+	PArray * bfstree;
+	ul * roots;
+	ul bfstreecnt = 128;
+
+	bfstree = (PArray*)malloc(sizeof(PArray) * vcnt);
+	roots = calloc(bfstreecnt, sizeof(ul));
+
+	getroots(vlist, vcnt, roots, bfstreecnt);
 
 
+	for(i = 0; i < vcnt; i++){
+		bfstree[i].parent = calloc(bfstreecnt, sizeof(ul));
+		bfstree[i].lvl = calloc(bfstreecnt, sizeof(ul));
+	}
+
+	getbfstree(vlist, bfstree, roots, vcnt, bfstreecnt);
 
 	printf("\nRabbit gets ready ... starts hopping ...\n");
 
 	ul k = 4;
 	//ngbcnt(vlist, vcnt, k);
-	shortpath(vlist, vlistsort, vcnt);
+
+	shortpath(vlist, vlistsort, bfstree, vcnt);
+
+
+
 
 	//cleanup(vlist, elist, vcnt);
 
@@ -64,6 +83,7 @@ void ugfindpath(){
 	free(vlist);
 	free(elist);
 	free(vlistsort);
+	free(bfstree);
 
 }
 

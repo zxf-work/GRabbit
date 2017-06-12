@@ -50,4 +50,9 @@ typedef struct n{
     long dgr;
 }nb;
 
+typedef struct treearry{
+	ul * parent;
+	ul * lvl;
+}PArray;
+
 #endif /* RABBIT_H_ */

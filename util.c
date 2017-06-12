@@ -531,3 +531,25 @@ void dg_cleanup(DVertex * vlist, DVertex * vlistsort, Edge * elist, ul vcnt){
 	//free(vlist);
 	//free(elist);
 }
+
+void getroots(Vertex * vlist, ul vcnt, ul * roots, ul bfstreecnt){
+	nb * dgrarray;
+	dgrarray = (nb*)malloc(sizeof(nb)*vcnt);
+
+	ul i = 1;
+	for(i=1;i<vcnt;i++){
+		dgrarray[i].id = i;
+		dgrarray[i].dgr = vlist[i].dgr;
+	}
+
+	qsort(&dgrarray[1], vcnt-1, sizeof(nb), cmpfunc);
+
+	for(i = 0; i < bfstreecnt; i++){
+		roots[i] = dgrarray[i+1].id;
+		//printf("Top-%ld degree vertex %ld[%ld]\n",i+1, roots[i], dgrarray[i+1].dgr);
+
+	}
+	free(dgrarray);
+
+
+}
