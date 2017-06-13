@@ -533,23 +533,43 @@ void dg_cleanup(DVertex * vlist, DVertex * vlistsort, Edge * elist, ul vcnt){
 }
 
 void getroots(Vertex * vlist, ul vcnt, ul * roots, ul bfstreecnt){
-	nb * dgrarray;
-	dgrarray = (nb*)malloc(sizeof(nb)*vcnt);
 
-	ul i = 1;
-	for(i=1;i<vcnt;i++){
-		dgrarray[i].id = i;
-		dgrarray[i].dgr = vlist[i].dgr;
-	}
+    FILE * fp;
+    ul dgr;
+    ul i;
+    fp=fopen("dgr","r");
+    if(fp!=NULL){
+    	for(i = 0; i < bfstreecnt; i++){
+    		fscanf(fp,"%ld",&roots[i]);
+    		fscanf(fp,"%ld", &dgr);
+    			//printf("Top-%ld degree vertex %ld[%ld]\n",i+1, roots[i], dgrarray[i+1].dgr);
+    	}
+    }
+    else{
+    	fp=fopen("tmp","w");
+    	printf("dumping dgr log to disk\n");
 
-	qsort(&dgrarray[1], vcnt-1, sizeof(nb), cmpfunc);
+    	for(i=1;i<vcnt;i++){
+    		fprintf(fp,"%ld ",i);
+    		fprintf(fp, "%ld\n", vlist[i].dgr);
+    	}
+    	fclose(fp);
+    	system("sort -n -r -k 2 tmp > dgr");
+    	system("rm -f tmp");
+    	//qsort(&dgrarray[1], vcnt-1, sizeof(nb), cmpfunc);
 
-	for(i = 0; i < bfstreecnt; i++){
-		roots[i] = dgrarray[i+1].id;
-		//printf("Top-%ld degree vertex %ld[%ld]\n",i+1, roots[i], dgrarray[i+1].dgr);
+    	fp=fopen("dgr","r");
+    	for(i = 0; i < bfstreecnt; i++){
+    		fscanf(fp,"%ld",&roots[i]);
+    		fscanf(fp,"%ld", &dgr);
 
-	}
-	free(dgrarray);
+    		//printf("Top-%ld degree vertex %ld[%ld]\n",i+1, roots[i], dgrarray[i+1].dgr);
+
+    	}
+    	fclose(fp);
+    }
+    printf("High degree landmarks loaded\n");
+
 
 
 }

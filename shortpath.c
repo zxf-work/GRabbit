@@ -145,7 +145,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 	*/
 	k = 1;
 
-	while(k<256){
+	while(k<2){
 		printf("\n%ld-bfstree\n",k);
 
 		for(i = 0; i < qcnt; i++){
