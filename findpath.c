@@ -52,7 +52,7 @@ void ugfindpath(){
 
 	PArray * bfstree;
 	ul * roots;
-	ul bfstreecnt = 128;
+	ul bfstreecnt = 4;
 
 	bfstree = (PArray*)malloc(sizeof(PArray) * vcnt);
 	roots = calloc(bfstreecnt, sizeof(ul));
@@ -72,7 +72,7 @@ void ugfindpath(){
 	ul k = 4;
 	//ngbcnt(vlist, vcnt, k);
 
-	shortpath(vlist, vlistsort, bfstree, vcnt);
+	//shortpath(vlist, vlistsort, bfstree, vcnt);
 
 
 

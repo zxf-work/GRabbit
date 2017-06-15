@@ -1457,6 +1457,133 @@ void klimit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 
 }
 
+void klimitdrtbfs(Vertex * vlist, ul vcnt, ul s, ul t, Queue * qs, Queue * qt, char * vcheck, Result * r, Flag *f, ul k){
+	ul qsl = 0;
+	ul qtl = 0;
+	ul hopcnt = 0;
+	ul sfrtecnt = 1;
+	ul tfrtecnt = 1;
+
+	sfrtecnt = vlist[getqhead(qs)].dgr;
+	tfrtecnt = vlist[getqhead(qt)].dgr;
+
+	clock_t begin = clock();
+	while(qs->length != 0 && qt->length != 0 && (!f->hit && !f->meet)){
+
+		// set the range to traverse
+		qsl = qs->length;
+		qtl = qt->length;
+
+		//printf("sfrt = %ld tfrt = %ld\n",sfrtecnt, tfrtecnt);
+		if(sfrtecnt <= tfrtecnt){
+			sfrtecnt = 0;
+		// search from s-side
+		//printf("qsl = %ld\n", qsl);
+		while(!f->hit && !f->meet && qsl != 0){
+			s = qpop(qs);
+
+			//printf("%ld-s-%ld:\t",hopcnt+1,s);
+			drtbfshop(vlist, vlist[s].ngb, vlist[s].dgr, t, qs, vcheck, r, f, 1, &sfrtecnt);
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("s-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				//printf("\t meeting at exploring %ld[%ld] to %ld[%ld]\n",s,vlist[s].dgr, r->mid, vlist[r->mid].dgr);
+				break;
+			}
+			qsl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("s-side step %ld finished\n", hopcnt);
+		}
+
+		}else{
+			tfrtecnt = 0;
+		//search from t-side
+		//printf("qtl = %ld\n", qtl);
+		while(!f->hit && !f->meet && qtl != 0){
+			t = qpop(qt);
+
+			//printf("%ld-t-%ld:\t",hopcnt+1, t);
+			drtbfshop(vlist, vlist[t].ngb, vlist[t].dgr, s, qt, vcheck, r, f, 2, &tfrtecnt);
+			//printf("\n");
+			if(f->hit || f->meet){
+				hopcnt++;
+				//printf("t-side step %ld break\n", hopcnt);
+				r->d = hopcnt;
+				//printf("\t meeting at exploring %ld[%ld] to %ld[%ld]\n",t,vlist[t].dgr, r->mid, vlist[r->mid].dgr);
+				break;
+			}
+			qtl--;
+		}
+		if(!f->hit && !f->meet){
+			hopcnt++;
+			//printf("t-side step %ld finished\n", hopcnt);
+		}
+
+		}
+	}
+
+
+	clock_t end = clock();
+	float t_total = ((float)(end-begin)/1000000.0F)*1000;
+
+	r->ttotal += t_total;
+
+
+	if(f->hit || f->meet){
+		printf("%ld - %ld dist: %ld v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->d, r->vtotal, r->etotal, r->ttotal);
+	}
+	else{
+		printf("%ld - %ld dist: null v_total: %ld e_total: %ld t_total: %f ms\n", r->s, r->t, r->vtotal, r->etotal, r->ttotal);
+	}
+
+
+}
+
+void klimitdrt(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
+	Queue * qs;
+		Queue * qt;
+		Flag * f;
+
+
+
+		qs = (Queue*)malloc(sizeof(Queue));
+		qt = (Queue*)malloc(sizeof(Queue));
+		f = (Flag *)malloc(sizeof(Flag));
+
+		f->hit = false;
+		f->meet = false;
+
+		qinit(qs);
+		qinit(qt);
+
+		qadd(qs, s);
+		qadd(qt, t);
+
+		char * vcheck;
+
+		vcheck=(char*)calloc(vcnt,sizeof(char));
+		vcheck[s] = 1;
+		vcheck[t] = 2;
+
+		r->s = s;
+		r->t = t;
+		r->vtotal = 2;
+
+
+		klimitdrtbfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f, k);
+
+		//onebfs(vlist, vcnt, s, t, qs, qt, vcheck, r, f);
+
+		qclean(qs);
+		qclean(qt);
+		free(vcheck);
+
+}
+
 void kunvisit(Vertex * vlist, ul vcnt, ul s, ul t, ul k, Result * r){
 	Queue * qs;
 	Queue * qt;

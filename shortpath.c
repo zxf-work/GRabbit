@@ -21,6 +21,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 	Result * resdv;
 	Result * resee;
 	Result * reslm;
+	Result * reslmdrt;
 
 	query = (ul*)calloc(qcnt*2, sizeof(ul));
 	res = (Result*)malloc(sizeof(Result) * qcnt);
@@ -32,6 +33,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 	resdv = (Result*)malloc(sizeof(Result) * qcnt);
 	resee = (Result*)malloc(sizeof(Result) * qcnt);
 	reslm = (Result*)malloc(sizeof(Result) * qcnt);
+	reslmdrt = (Result*)malloc(sizeof(Result) * qcnt);
 
 	rinit(res, qcnt);
 	rinit(resl, qcnt);
@@ -42,6 +44,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 	rinit(resdv, qcnt);
 	rinit(resee, qcnt);
 	rinit(reslm, qcnt);
+	rinit(reslmdrt, qcnt);
 
 
 	fp=fopen("stpath-query.txt","r");
@@ -107,8 +110,8 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 	/********BFS-K TEST***********/
 
 	ul k = 1;
-	/*
-	//S1: k-limit
+
+	//S1: k-limit-ee
 	while(k < 2048){
 		printf("\n%ld-limit\n",k);
 
@@ -126,7 +129,7 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 
 	k = 1;
 
-	//S2: k-unvisit
+	//S2: k-unvisit-ee
 	while(k<2048){
 		printf("\n%ld-unvisit\n",k);
 
@@ -141,20 +144,36 @@ void shortpath(Vertex * vlist, Vertex * vlistsort, PArray * bfstree, ul vcnt) {
 		k = k * 2;
 	}
 
-
-	*/
 	k = 1;
 
-	while(k<2){
+	//S3: k-limit-drt
+	while(k < 2048){
+		printf("\n%ld-limit\n",k);
+
+		for(i = 0; i < qcnt; i++){
+			s = query[2*i];
+			t = query[2*i+1];
+			klimitdrt(vlistsort, vcnt, s, t, k, &(reslmdrt[i]));
+
+		}
+		report(res,reslmdrt,qcnt);
+		rinit(reslmdrt, qcnt);
+		k = k * 2;
+	}
+
+
+	k = 1;
+	//S4: k-bfstree
+	while(k<32){
 		printf("\n%ld-bfstree\n",k);
 
 		for(i = 0; i < qcnt; i++){
 			s = query[2*i];
 			t = query[2*i+1];
-			ktree(vlist, bfstree, vcnt, s, t, k, &(resu[i]));
+			ktree(vlist, bfstree, vcnt, s, t, k, &(reslm[i]));
 		}
-		report(res,resu,qcnt);
-		rinit(resu, qcnt);
+		report(res,reslm,qcnt);
+		rinit(reslm, qcnt);
 
 		k = k * 2;
 	}

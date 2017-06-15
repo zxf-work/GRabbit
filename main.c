@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
 {
 
 	printf("Welcome to the Rabbit-hopping program!\n");
-
+	printf("size of long int is %d\n",sizeof(ul));
 	clock_t begin = clock();
 
 	//findpath_u();
