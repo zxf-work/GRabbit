@@ -517,15 +517,21 @@ void cleanup(Vertex * vlist, Edge * elist, ul vcnt){
 void dg_cleanup(DVertex * vlist, DVertex * vlistsort, Edge * elist, ul vcnt){
 	ul i = 0;
 
+	if(vlist!=NULL){
 	for(i = 0; i < vcnt; i++){
 		if(vlist[i].indgr != 0)
 			free(vlist[i].in);
 		if(vlist[i].outdgr != 0)
 			free(vlist[i].out);
-		if(vlistsort[i].indgr != 0)
-			free(vlistsort[i].in);
-		if(vlistsort[i].outdgr != 0)
-			free(vlistsort[i].out);
+	}
+	}
+	if(vlistsort!=NULL){
+		for(i = 0; i < vcnt; i++){
+				if(vlistsort[i].indgr != 0)
+					free(vlistsort[i].in);
+				if(vlistsort[i].outdgr != 0)
+					free(vlistsort[i].out);
+		}
 	}
 
 	//free(vlist);

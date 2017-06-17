@@ -119,6 +119,7 @@ void dgfindpath(){
 	dg_adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
 
+	/*
 	vlistsort = (DVertex *)malloc(sizeof(DVertex) * vcnt);
 
 	for(i = 0; i < vcnt; i++){
@@ -131,7 +132,7 @@ void dgfindpath(){
 	dg_dgrcnt(vlistsort, elist, vcnt, ecnt); //calculate every vertex's degree
 	dg_adjmaker(vlistsort, elist, vcnt, ecnt); //make the adjlist
 	dg_adjsort(vlistsort, vcnt);
-
+	*/
 	
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
@@ -143,7 +144,9 @@ void dgfindpath(){
 	ngbcnt(vlist, vcnt, k);
 	*/
 
-	dg_shortpath(vlist, vlistsort, vcnt);
+	dg_diameter(vlist, vcnt);
+	//dg_shortpath(vlist, vlistsort, vcnt);
+
 
 	dg_cleanup(vlist, vlistsort, elist, vcnt);
 
