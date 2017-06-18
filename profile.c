@@ -7,57 +7,83 @@
 
 #include "queue.h"
 
-void dg_naivebfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * r, ul * d, ul * nextseed, short mark){
+void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d, ul * nextseed, short mark){
 
 	ul qsl = 0;
 	ul i = 0;
 	ul cur = 0;
+	ul tmp = 0;
 
 	ul hopcnt = 0;
 
+	if(mark%2==1){
+		while(qs->length != 0){
+			qsl = qs->length;
 
-	qsl=qs->length;
+			while(qsl != 0){
+				s = qpop(qs);
+				qsl--;
 
+					for(i = 0; i < vlist[s].outdgr; i++){
+						cur = vlist[s].out[i];
 
+						if(vcheck[cur] != mark){
+							vcheck[cur] = mark;
+							tmp = cur;
+							qadd(qs,cur);
+						//printf("\t%ld(add)\t",cur);
+						}
+
+					}
+
+			}
+			hopcnt++;
+
+		}
+
+	}
+	else{
 	while(qs->length != 0){
-
-		// set the range to traverse
 		qsl = qs->length;
 
-
-		// search from s-side
-		//printf("qsl = %ld\n", qsl);
 		while(qsl != 0){
 			s = qpop(qs);
 			qsl--;
-			for(i = 0; i < vlist[s].outdgr; i++){
-				cur = vlist[s].out[i];
 
-				if(vcheck[cur] != mark){
-					vcheck[cur] = mark;
-					qadd(qs,cur);
-					//printf("\t%ld(add)\t",cur);
+				for(i = 0; i < vlist[s].indgr; i++){
+					cur = vlist[s].in[i];
+
+					if(vcheck[cur] != mark){
+						vcheck[cur] = mark;
+						tmp = cur;
+						qadd(qs,cur);
+						//printf("\t%ld(add)\t",cur);
+					}
+
 				}
 
-			}
+
 			//printf("\n");
 
 		}
 		hopcnt++;
+
 	}
-	(*r)=hopcnt;
+
+	}
+
 	(*d)=hopcnt;
-	(*nextseed)=s;
+	(*nextseed)=tmp;
 }
 
 
-void foursweep(DVertex * vlist, ul vcnt, ul * seed, ul * radius, ul * dia){
+void foursweep(DVertex * vlist, ul vcnt, ul * seed,  ul * dia){
 
 	ul s = (*seed);
-	ul r = (*radius);
+
 	ul d = (*dia);
 	ul nextseed = 0;
-	ul mark = 1;
+
 
 	Queue * qs;
 	qs = (Queue*)malloc(sizeof(Queue));
@@ -69,47 +95,46 @@ void foursweep(DVertex * vlist, ul vcnt, ul * seed, ul * radius, ul * dia){
 	vcheck=(char*)calloc(vcnt,sizeof(char));
 	vcheck[s] = 1;
 
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &r, &d, &nextseed, 1);
-	if(r<(*radius)){
-		(*radius)=r;
-	}
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 1);
+
 	if(d>(*dia)){
 		(*dia)=d;
+		printf("Source [%ld]: 1-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	printf("1-sweep: ub = %ld, diameter = %ld\n", radius*2, dia);
+
 
 	s=nextseed;
 	vcheck[s] = 2;
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &r, &d, &nextseed, 2);
-	if(r<(*radius)){
-		(*radius)=r;
-	}
+	qadd(qs, s);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 2);
+
 	if(d>(*dia)){
 		(*dia)=d;
+		printf("Source [%ld]: 2-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	printf("2-sweep: ub = %ld, diameter = %ld\n", radius*2, dia);
+	//printf("2-sweep [%ld]: diameter = %ld\n", s, d);
 
 	s=nextseed;
 	vcheck[s] = 3;
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &r, &d, &nextseed, 3);
-	if(r<(*radius)){
-		(*radius)=r;
-	}
+	qadd(qs, s);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 3);
+
 	if(d>(*dia)){
 		(*dia)=d;
+		printf("Source [%ld]: 3-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	printf("3-sweep: ub = %ld, diameter = %ld\n", radius*2, dia);
+	//printf("3-sweep [%ld]:  diameter = %ld\n", s, d);
 
 	s=nextseed;
 	vcheck[s] = 4;
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &r, &d, &nextseed, 4);
-	if(r<(*radius)){
-		(*radius)=r;
-	}
+	qadd(qs, s);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 4);
+
 	if(d>(*dia)){
 		(*dia)=d;
+		printf("Source [%ld]: 4-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	printf("4-sweep: ub = %ld, diameter = %ld\n", radius*2, dia);
+	//printf("4-sweep [%ld]:  diameter = %ld\n", s, d);
 
 	qclean(qs);
 	free(vcheck);
@@ -123,34 +148,29 @@ void dg_diameter(DVertex * vlist, ul vcnt){
 
 	ul i, j, k;
 
-	ul radius = 100000;
 	ul dia = 0;
-
-	ul tmpradius = radius;
 	ul tmpdia = dia;
-
-	ul ub = radius * 2;
 
 	FILE * fp;
 	fp = fopen("source.txt","r");
 
+	j=stagecnt/100;
+	k=0;
+
 	for(i=0;i<stagecnt;i++){
 		fscanf(fp,"%ld",&seed);
-		printf("Stage %ld, starting from vertex %ld\n", i, seed);
-		foursweep(vlist,vcnt,&seed,&radius,&dia);
-
-		if(radius<tmpradius){
-			ub = radius * 2;
-			tmpradius = radius;
+		if(i%j==0){
+			printf("<%ld>\n", k++);
 		}
+		foursweep(vlist,vcnt,&seed,&dia);
+
+
 		if(dia>tmpdia){
 			tmpdia = dia;
 		}
-		if(dia==ub){
-			print("Exact diameter is %ld\n",dia);
-			break;
-		}
+
 	}
+	printf("diameter is above %ld \n", dia);
 	fclose(fp);
 
 }

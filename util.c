@@ -148,7 +148,7 @@ void dg_adjmaker(DVertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 	outoff = (ul *)calloc(vcnt, sizeof(ul));
 	// offset created to generate the adjmatrix from edge list;
 
-	for(i = 0; i < vcnt; i++){
+	for(i = 1; i < vcnt; i++){
 		if(vlist[i].indgr != 0){
 			vlist[i].in = (ul *)calloc(vlist[i].indgr, sizeof(ul));
 		}
@@ -159,20 +159,31 @@ void dg_adjmaker(DVertex * vlist, Edge * elist, ul vcnt, ul ecnt){
 
 
 	printf("Adjacency list generating : ");
+	//getchar();
 	for(i = 0; i< ecnt; i++){
+
 		s = elist[i].s;
 		t = elist[i].t;
-
+		if(outoff[s]>=vlist[s].outdgr){
+			printf("Error! %ld %ld\n",s,t);
+			getchar();
+		}
 		vlist[s].out[outoff[s]] = t;
 		outoff[s]++;
 
+		if(inoff[t]>=vlist[t].indgr){
+			printf("Error! %ld %ld\n",s,t);
+			getchar();
+		}
 		vlist[t].in[inoff[t]] = s;
 		inoff[t]++;
 
-		if( i % 1000000 == 0)
+		if( i % 100000000 == 0)
 			printf("#");
 	}
 	printf("\nAdjacency list generated\n\n");
+
+	//getchar();
 
 	free(outoff);
 	free(inoff);
