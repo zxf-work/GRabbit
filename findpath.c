@@ -93,6 +93,7 @@ void dgfindpath(){
 	ul vcnt;
 	ul ecnt;
 	char gfile[16];
+	FILE * fp;
 
 
 	readconfig(&vcnt, &ecnt, gfile);
@@ -118,6 +119,13 @@ void dgfindpath(){
 	dg_dgrcnt(vlist, elist, vcnt, ecnt); //calculate every vertex's degree
 	dg_adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
+	/*
+	fp=fopen("dgr.txt","w");
+	for(i=1;i<vcnt;i++)
+		fprintf(fp,"%ld %ld\n",vlist[i].id, vlist[i].outdgr*vlist[i].indgr);
+	fclose(fp);
+	printf("dgr exported!\n");
+	*/
 
 	/*
 	vlistsort = (DVertex *)malloc(sizeof(DVertex) * vcnt);
@@ -132,8 +140,9 @@ void dgfindpath(){
 	dg_dgrcnt(vlistsort, elist, vcnt, ecnt); //calculate every vertex's degree
 	dg_adjmaker(vlistsort, elist, vcnt, ecnt); //make the adjlist
 	dg_adjsort(vlistsort, vcnt);
-	*/
 	
+	*/
+
 	printf("Rabbit gets ready ... starts hopping ...\n");
 
 	/*********
@@ -144,8 +153,11 @@ void dgfindpath(){
 	ngbcnt(vlist, vcnt, k);
 	*/
 
-	dg_diameter(vlist, vcnt);
+	//dg_diameter(vlist, vcnt);//diameter estimation function
+
 	//dg_shortpath(vlist, vlistsort, vcnt);
+
+	dg_lmtest(vlist, vcnt);
 
 
 	dg_cleanup(vlist, vlistsort, elist, vcnt);

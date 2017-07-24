@@ -7,7 +7,7 @@
 
 #include "queue.h"
 
-void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d, ul * nextseed, short mark){
+void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d, ul * nextseed, short mark, ul * scheck){
 
 	ul qsl = 0;
 	ul i = 0;
@@ -16,7 +16,7 @@ void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d
 
 	ul hopcnt = 0;
 
-	if(mark%2==1){
+	if(mark%2==0){
 		while(qs->length != 0){
 			qsl = qs->length;
 
@@ -29,6 +29,7 @@ void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d
 
 						if(vcheck[cur] != mark){
 							vcheck[cur] = mark;
+							if(scheck[cur]==0)
 							tmp = cur;
 							qadd(qs,cur);
 						//printf("\t%ld(add)\t",cur);
@@ -55,6 +56,7 @@ void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d
 
 					if(vcheck[cur] != mark){
 						vcheck[cur] = mark;
+						if(scheck[cur]==0)
 						tmp = cur;
 						qadd(qs,cur);
 						//printf("\t%ld(add)\t",cur);
@@ -77,7 +79,7 @@ void dg_ssbfs(DVertex * vlist, ul vcnt, ul s,  Queue * qs, char * vcheck, ul * d
 }
 
 
-void foursweep(DVertex * vlist, ul vcnt, ul * seed,  ul * dia){
+void foursweep(DVertex * vlist, ul vcnt, ul * seed,  ul * dia, ul * scheck){
 
 	ul s = (*seed);
 
@@ -94,47 +96,52 @@ void foursweep(DVertex * vlist, ul vcnt, ul * seed,  ul * dia){
 
 	vcheck=(char*)calloc(vcnt,sizeof(char));
 	vcheck[s] = 1;
+	scheck[s] = 1;
 
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 1);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 1, scheck);
 
 	if(d>(*dia)){
 		(*dia)=d;
 		printf("Source [%ld]: 1-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
+	printf("\t1-sweep [%ld]: diameter = %ld\n", s, d);
 
 
 	s=nextseed;
 	vcheck[s] = 2;
+	scheck[s] = 1;
 	qadd(qs, s);
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 2);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 2, scheck);
 
 	if(d>(*dia)){
 		(*dia)=d;
 		printf("Source [%ld]: 2-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	//printf("2-sweep [%ld]: diameter = %ld\n", s, d);
+	printf("\t2-sweep [%ld]: diameter = %ld\n", s, d);
 
 	s=nextseed;
 	vcheck[s] = 3;
+	scheck[s] = 1;
 	qadd(qs, s);
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 3);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 3, scheck);
 
 	if(d>(*dia)){
 		(*dia)=d;
 		printf("Source [%ld]: 3-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	//printf("3-sweep [%ld]:  diameter = %ld\n", s, d);
+	printf("\t3-sweep [%ld]:  diameter = %ld\n", s, d);
 
 	s=nextseed;
 	vcheck[s] = 4;
+	scheck[s] = 1;
 	qadd(qs, s);
-	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 4);
+	dg_ssbfs(vlist, vcnt, s, qs, vcheck, &d, &nextseed, 4, scheck);
 
 	if(d>(*dia)){
 		(*dia)=d;
 		printf("Source [%ld]: 4-sweep [%ld]: diameter = %ld\n",(*seed), s, (*dia));
 	}
-	//printf("4-sweep [%ld]:  diameter = %ld\n", s, d);
+	printf("\t4-sweep [%ld]:  diameter = %ld\n", s, d);
 
 	qclean(qs);
 	free(vcheck);
@@ -144,7 +151,7 @@ void foursweep(DVertex * vlist, ul vcnt, ul * seed,  ul * dia){
 
 void dg_diameter(DVertex * vlist, ul vcnt){
 	ul seed;
-	ul stagecnt = 2000;
+	ul stagecnt = 100;
 
 	ul i, j, k;
 
@@ -153,16 +160,15 @@ void dg_diameter(DVertex * vlist, ul vcnt){
 
 	FILE * fp;
 	fp = fopen("source.txt","r");
+	ul * scheck;
 
-	j=stagecnt/100;
-	k=0;
+	scheck=calloc(vcnt, sizeof(ul));
+
 
 	for(i=0;i<stagecnt;i++){
 		fscanf(fp,"%ld",&seed);
-		if(i%j==0){
-			printf("<%ld>\n", k++);
-		}
-		foursweep(vlist,vcnt,&seed,&dia);
+		printf("<%ld>\n", i);
+		foursweep(vlist,vcnt,&seed,&dia,scheck);
 
 
 		if(dia>tmpdia){
@@ -173,5 +179,6 @@ void dg_diameter(DVertex * vlist, ul vcnt){
 	printf("diameter is above %ld \n", dia);
 	fclose(fp);
 
+	free(scheck);
 }
 
