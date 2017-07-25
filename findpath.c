@@ -14,6 +14,7 @@ void ugfindpath(){
 	ul vcnt;
 	ul ecnt;
 	char gfile[16];
+	FILE * fp;
 
 
 	readconfig(&vcnt, &ecnt, gfile);
@@ -37,8 +38,15 @@ void ugfindpath(){
 	dgrcnt(vlist, elist, vcnt, ecnt); //calculate every vertex's degree
 	adjmaker(vlist, elist, vcnt, ecnt); //make the adjlist
 
+	/*
+	fp=fopen("dgr.txt","w");
+	for(i=1;i<vcnt;i++)
+		fprintf(fp,"%ld %ld\n",vlist[i].id, vlist[i].dgr);
+	fclose(fp);
+	printf("dgr exported!\n");
+	*/
 
-
+	/*
 	vlistsort = (Vertex *)malloc(sizeof(Vertex) * vcnt);
 
 	for(i = 0; i < vcnt; i++){
@@ -66,16 +74,17 @@ void ugfindpath(){
 	}
 
 	getbfstree(vlist, bfstree, roots, vcnt, bfstreecnt);
+	*/
 
 	printf("\nRabbit gets ready ... starts hopping ...\n");
 
-	ul k = 4;
+	//ul k = 4;
 	//ngbcnt(vlist, vcnt, k);
 
 	//shortpath(vlist, vlistsort, bfstree, vcnt);
 
 
-
+	ug_lmtest(vlist,vcnt);
 
 	//cleanup(vlist, elist, vcnt);
 
@@ -83,7 +92,7 @@ void ugfindpath(){
 	free(vlist);
 	free(elist);
 	free(vlistsort);
-	free(bfstree);
+	//free(bfstree);
 
 }
 
@@ -126,6 +135,7 @@ void dgfindpath(){
 	fclose(fp);
 	printf("dgr exported!\n");
 	*/
+
 
 	/*
 	vlistsort = (DVertex *)malloc(sizeof(DVertex) * vcnt);
